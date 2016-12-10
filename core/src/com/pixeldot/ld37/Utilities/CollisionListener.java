@@ -7,6 +7,7 @@ public class CollisionListener implements ContactListener {
 
     private boolean onGround;
     private boolean playerPushing;
+    private boolean isSwitch;
     private int playerBoxPulling =-1;
 
     @Override
@@ -29,6 +30,15 @@ public class CollisionListener implements ContactListener {
         else if(a.getUserData().equals("Wall") && b.getUserData().equals("PlayerMain")){
             playerPushing=true;
         }
+
+
+        if(a.getUserData().equals("Switch") && b.getUserData().equals("PlayerMain")){
+            isSwitch = true;
+        }
+        else if(a.getUserData().equals("PlayerMain") && b.getUserData().equals("Switch")){
+            isSwitch = true;
+        }
+
         playerBoxPulling=-1;
         if(a.getUserData().equals("PlayerMain")) {
             if ((b.getUserData()).toString().startsWith("BoxRight")) {
@@ -65,6 +75,13 @@ public class CollisionListener implements ContactListener {
         else if(a.getUserData().equals("Wall") && b.getUserData().equals("PlayerMain")){
             playerPushing=false;
         }
+
+        if(a.getUserData().equals("Switch") && b.getUserData().equals("PlayerMain")){
+            isSwitch = false;
+        }
+        else if(a.getUserData().equals("PlayerMain") && b.getUserData().equals("Switch")){
+            isSwitch = false;
+        }
         if(a.getUserData().equals("PlayerMain")) {
             if ((b.getUserData()).toString().startsWith("BoxRight")) {
                 playerBoxPulling = -1;
@@ -98,4 +115,5 @@ public class CollisionListener implements ContactListener {
     public void setPlayerBoxPulling(int playerBoxPulling) {
         this.playerBoxPulling = playerBoxPulling;
     }
+    public boolean isSwitch() { return isSwitch; }
 }

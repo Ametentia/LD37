@@ -13,6 +13,8 @@ import com.pixeldot.ld37.Utilities.Animation;
 import com.pixeldot.ld37.Utilities.CollisionListener;
 import com.pixeldot.ld37.Utilities.ContentManager;
 import com.pixeldot.ld37.Utilities.GameStateManager;
+import com.pixeldot.ld37.WorldObjects.Block;
+import com.pixeldot.ld37.WorldObjects.Switch;
 import com.pixeldot.ld37.WorldObjects.Box;
 import com.pixeldot.ld37.WorldObjects.WorldObject;
 
@@ -36,7 +38,8 @@ public class Play extends State {
 
     private CollisionListener contactListener;
 
-    private boolean isThere = true;
+    private Switch aSwitch;
+    private Block block;
     private ArrayList<WorldObject> worldObjects;
     private boolean jointMade;
     private Joint joint;
@@ -52,6 +55,9 @@ public class Play extends State {
         ContentManager.loadTexture("PlayerIdle", "Character/idleSpriteSheet.png");
         ContentManager.loadTexture("Brick", "Materials/brickTexture.png");
 
+        block = new Block(world, new Vector2(700 / PPM, (HEIGHT - 50) / PPM), "Brick");
+        aSwitch = new Switch(world, new Vector2(400 / PPM, (HEIGHT - 50) / PPM), block);
+
         createRoom();
         createPlayer();
     }
@@ -63,6 +69,12 @@ public class Play extends State {
             box2DCam.unproject(mouse);
 
             player.getBody().setTransform(mouse.x, mouse.y, 0);
+        }
+
+        block.update(dt);
+
+        if(contactListener.isSwitch() && Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+            aSwitch.flick();
         }
 
         for(WorldObject wo: worldObjects) {
@@ -103,9 +115,12 @@ public class Play extends State {
         for(WorldObject wo: worldObjects)
             wo.render(batch);
 
+
+
+        block.render(batch);
         font.draw(batch, "On Ground: " + player.isOnGound(), 100, 100);
         batch.end();
-        //debugRenderer.render(world, box2DCam.combined);
+        debugRenderer.render(world, box2DCam.combined);
     }
 
     public void dispose() {}
