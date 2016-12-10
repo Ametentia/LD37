@@ -73,7 +73,7 @@ public class Player {
 
 
         if(Gdx.input.isKeyPressed(Input.Keys.SPACE) && onGound) {
-            body.applyForceToCenter(0, -12000 / PPM, true);
+            body.applyForceToCenter(0, -5700 / PPM, true);
         }
     }
 

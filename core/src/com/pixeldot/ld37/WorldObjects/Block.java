@@ -4,9 +4,11 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.pixeldot.ld37.Utilities.ContentManager;
+
 import static com.pixeldot.ld37.Game.PPM;
 
-public class Block {
+public class Block implements WorldObject{
     private Body body;
     private Texture texture;
 
@@ -23,13 +25,7 @@ public class Block {
 
         body.createFixture(blockFDef);
 
-        texture = new Texture("Textures/Materials/brickTexture.png");
-    }
-
-    public void render(SpriteBatch batch){
-        batch.begin();
-
-        batch.end();
+        texture = ContentManager.getTexture("Brick");
     }
 
     public Body getBody() {
@@ -46,5 +42,15 @@ public class Block {
 
     public void setTexture(Texture texture) {
         this.texture = texture;
+    }
+
+    @Override
+    public void render(SpriteBatch batch) {
+        batch.draw(texture,body.getPosition().x,body.getPosition().y);
+    }
+
+    @Override
+    public void update(float delta) {
+
     }
 }

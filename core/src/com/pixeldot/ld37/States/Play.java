@@ -11,6 +11,11 @@ import com.pixeldot.ld37.Utilities.Animation;
 import com.pixeldot.ld37.Utilities.CollisionListener;
 import com.pixeldot.ld37.Utilities.ContentManager;
 import com.pixeldot.ld37.Utilities.GameStateManager;
+import com.pixeldot.ld37.WorldObjects.Box;
+import com.pixeldot.ld37.WorldObjects.WorldObject;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 import static com.pixeldot.ld37.Game.WIDTH;
 import static com.pixeldot.ld37.Game.HEIGHT;
@@ -30,11 +35,13 @@ public class Play extends State {
     private CollisionListener contactListener;
 
     private boolean isThere = true;
+    private ArrayList<WorldObject> worldObjects;
 
     public Play(GameStateManager gsm) {
         super(gsm);
 
         world.setContactListener(contactListener = new CollisionListener());
+        worldObjects = new ArrayList<>();
 
         ContentManager.loadTexture("PlayerRun", "Character/spritesheetSmol.png");
         ContentManager.loadTexture("PlayerWall", "Character/pushSpriteSheet.png");
@@ -64,12 +71,12 @@ public class Play extends State {
                 isThere = true;
             }
         }
-
+        for(WorldObject wo: worldObjects)
+            wo.update(dt);
 
         world.step(dt, 6, 2);
         player.setOnGound(contactListener.isOnGround());
         player.update(dt);
-        boxAnim.update(dt);
     }
 
     public void render() {
@@ -79,7 +86,9 @@ public class Play extends State {
 
         batch.begin();
         player.render(batch);
-        boxAnim.render(batch, boxBody.getPosition());
+        for(WorldObject wo: worldObjects)
+            wo.render(batch);
+
         font.draw(batch, "On Ground: " + player.isOnGound(), 100, 100);
         batch.end();
         debugRenderer.render(world, box2DCam.combined);
@@ -142,12 +151,6 @@ public class Play extends State {
         shape.setAsBox(8 / PPM, 16 / PPM, new Vector2(30/PPM, 0 / PPM), 0);
         playerFDef.isSensor = true;
 
-       /* playerBody.createFixture(playerFDef).setUserData("PlayerRight");
-
-        shape.setAsBox(8 / PPM, 16 / PPM, new Vector2(-30/PPM, 0 / PPM), 0);
-        playerFDef.isSensor = true;
-
-        playerBody.createFixture(playerFDef).setUserData("PlayerLeft");*/
 
         Animation a = new Animation("Run", ContentManager.getTexture("PlayerRun"), 2, 4);
         a.setTargetWidth(60);
@@ -169,21 +172,12 @@ public class Play extends State {
         shape.dispose();
 
         boxDef = new BodyDef();
-        boxDef.type = BodyDef.BodyType.StaticBody;
+        boxDef.type = BodyDef.BodyType.DynamicBody;
         boxDef.position.set(200 / PPM, (HEIGHT - 300) / PPM);
 
         boxBody = world.createBody(boxDef);
 
-        boxFDef = new FixtureDef();
-
-        PolygonShape box = new PolygonShape();
-        box.setAsBox(100 / PPM, 100 / PPM);
-        boxFDef.shape = box;
-
-        boxBody.createFixture(boxFDef).setUserData("Floor");
-
-        boxAnim = new Animation("Brick", ContentManager.getTexture("Brick"), 1, 1);
-        boxAnim.setTargetWidth(200);
-        boxAnim.setTargetHeight(200);
+        worldObjects.add(new Box(world,"Brick",new Vector2(150/PPM,50/PPM)));
+        worldObjects.add(new Box(world,"Brick",new Vector2(500/PPM,50/PPM)));
     }
 }

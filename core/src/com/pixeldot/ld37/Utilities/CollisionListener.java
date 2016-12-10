@@ -7,6 +7,7 @@ public class CollisionListener implements ContactListener {
 
     private boolean onGround;
     private boolean playerPushing;
+    private int playerBoxPulling;
 
     @Override
     public void beginContact(Contact contact) {
@@ -27,6 +28,14 @@ public class CollisionListener implements ContactListener {
         }
         else if(a.getUserData().equals("Wall") && b.getUserData().equals("PlayerMain")){
             playerPushing=true;
+        }
+        if(a.getUserData().equals("PlayerMain")){
+            if((b.getUserData()).toString().startsWith("BoxRight")){
+                playerBoxPulling=Integer.parseInt(b.getUserData().toString().replaceAll("BoxRight_",""));
+            }
+            else if((b.getUserData()).toString().startsWith("BoxLeft")){
+                playerBoxPulling=Integer.parseInt(b.getUserData().toString().replaceAll("BoxLeft_",""));
+            }
         }
     }
 
@@ -63,4 +72,12 @@ public class CollisionListener implements ContactListener {
 
     public boolean isOnGround() { return onGround; }
     public boolean isPlayerPushing() {return playerPushing;}
+
+    public int getPlayerBoxPulling() {
+        return playerBoxPulling;
+    }
+
+    public void setPlayerBoxPulling(int playerBoxPulling) {
+        this.playerBoxPulling = playerBoxPulling;
+    }
 }

@@ -6,7 +6,7 @@ import com.badlogic.gdx.physics.box2d.*;
 
 import static com.pixeldot.ld37.Game.PPM;
 
-public class Switch {
+public class Switch implements WorldObject{
     private Body body;
     private final Vector2 Size = new Vector2(20,20);
     private boolean on = false;
@@ -24,9 +24,6 @@ public class Switch {
         sensorFixDef.shape = shape;
 
         body.createFixture(sensorFixDef);
-    }
-    public void render(SpriteBatch sb){
-
     }
 
     public Body getBody() {
@@ -50,5 +47,15 @@ public class Switch {
     }
     public void flick(){
         on = !on;
+    }
+
+    @Override
+    public void render(SpriteBatch batch) {
+
+    }
+
+    @Override
+    public void update(float delta) {
+
     }
 }
