@@ -106,7 +106,7 @@ public class Play extends State {
 
         FixtureDef playerFDef = new FixtureDef();
         playerFDef.density = 1;
-        playerFDef.friction = 0.2f;
+        playerFDef.friction = 0.1f;
 
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(9 / PPM, 16 / PPM);
