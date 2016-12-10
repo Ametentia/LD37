@@ -38,6 +38,7 @@ public class Play extends State {
 
         ContentManager.loadTexture("PlayerRun", "Character/spritesheetSmol.png");
         ContentManager.loadTexture("PlayerWall", "Character/pushSpriteSheet.png");
+        ContentManager.loadTexture("PlayerIdle", "Character/idleSpriteSheet.png");
         ContentManager.loadTexture("Brick", "Materials/brickTexture.png");
 
         createRoom();
@@ -156,6 +157,11 @@ public class Play extends State {
 
         a = new Animation("SquishFace",ContentManager.getTexture("PlayerWall"), 2,4);
         a.setEndFrame(6);
+        a.setTargetWidth(60);
+        a.setTargetHeight(90);
+        player.addAnimation(a);
+
+        a = new Animation("Idle",ContentManager.getTexture("PlayerIdle"), 6,4);
         a.setTargetWidth(60);
         a.setTargetHeight(90);
         player.addAnimation(a);

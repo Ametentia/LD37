@@ -51,10 +51,11 @@ public class Player {
                 animations.get(currentAnimation).setStartFrame(1);
             }
             animations.get(currentAnimation).setFlipX(true);
+            animations.get("Idle").setFlipX(true);
             animations.get(currentAnimation).setStartFrame(1);
 
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.D)) {
+        else if(Gdx.input.isKeyPressed(Input.Keys.D)) {
             body.applyForceToCenter(400 / PPM, 0, true);
             if(collisions.isPlayerPushing())
                 currentAnimation="SquishFace";
@@ -63,7 +64,13 @@ public class Player {
                 animations.get(currentAnimation).setStartFrame(1);
             }
             animations.get(currentAnimation).setFlipX(false);
+            animations.get("Idle").setFlipX(false);
         }
+        else
+        {
+            currentAnimation = "Idle";
+        }
+
 
         if(Gdx.input.isKeyPressed(Input.Keys.SPACE) && onGound) {
             body.applyForceToCenter(0, -12000 / PPM, true);
