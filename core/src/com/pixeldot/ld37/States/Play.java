@@ -36,7 +36,7 @@ public class Play extends State {
 
         world.setContactListener(contactListener = new CollisionListener());
 
-        ContentManager.loadTexture("PlayerStand", "Character/cell01.png");
+        ContentManager.loadTexture("PlayerRun", "Character/spritesheetSmol.png");
         ContentManager.loadTexture("Brick", "Materials/brickTexture.png");
 
         createRoom();
@@ -126,7 +126,7 @@ public class Play extends State {
 
         FixtureDef playerFDef = new FixtureDef();
         playerFDef.density = 1;
-        playerFDef.friction = 0.3f;
+        playerFDef.friction = 0.1f;
 
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(30 / PPM, 45 / PPM);
@@ -139,7 +139,7 @@ public class Play extends State {
 
         playerBody.createFixture(playerFDef).setUserData("Foot");
 
-        Animation a = new Animation("Stand", ContentManager.getTexture("PlayerStand"), 1, 1);
+        Animation a = new Animation("Run", ContentManager.getTexture("PlayerRun"), 2, 4);
         a.setTargetWidth(60);
         a.setTargetHeight(90);
 

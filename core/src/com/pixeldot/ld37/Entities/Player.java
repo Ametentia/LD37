@@ -42,10 +42,12 @@ public class Player {
 
         if(Gdx.input.isKeyPressed(Input.Keys.A)) {
             body.applyForceToCenter(-400 / PPM, 0, true);
+            animations.get(currentAnimation).setFlipX(true);
         }
 
         if(Gdx.input.isKeyPressed(Input.Keys.D)) {
             body.applyForceToCenter(400 / PPM, 0, true);
+            animations.get(currentAnimation).setFlipX(false);
         }
 
         if(Gdx.input.isKeyPressed(Input.Keys.SPACE) && onGound) {

@@ -90,7 +90,7 @@ public class Animation {
 
             currentFrame++;
             if (currentFrame == totalFrames) {
-                currentFrame = 0;
+                currentFrame = 1;
                 totalPlays++;
                 if(totalPlays == maxPlays) {
                     finished = true;
