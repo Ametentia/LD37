@@ -5,11 +5,15 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
+import static com.pixeldot.ld37.Game.PPM;
+
 /**
  * An exact copy from last LD
  */
 public class Animation {
     private Vector2 position;
+
+    private String name;
 
     private TextureRegion texture;
     private int rows;
@@ -37,8 +41,8 @@ public class Animation {
      * @param rows How many rows the animation has
      * @param columns How many columns the animation has
      */
-    public Animation(Texture texture, int rows, int columns) {
-        this(texture, rows, columns, 0.1f);
+    public Animation(String name, Texture texture, int rows, int columns) {
+        this(name, texture, rows, columns, 0.1f);
     }
 
     /**
@@ -48,10 +52,12 @@ public class Animation {
      * @param columns How many columns the animation has
      * @param timePerFrame How much time (in seconds) a frame lasts for
      */
-    public Animation(Texture texture, int rows, int columns, float timePerFrame) {
+    public Animation(String name, Texture texture, int rows, int columns, float timePerFrame) {
         this.texture = new TextureRegion(texture);
         this.rows = rows;
         this.columns = columns;
+
+        this.name = name;
 
         totalFrames = rows * columns;
 
@@ -92,7 +98,7 @@ public class Animation {
      * Draws the animation on the screen on its current frame
      * @param batch The Sprite Batch used to render the texture on screen
      */
-    public void render(SpriteBatch batch, Vector2 position) {
+    public void render(SpriteBatch batch) {
         int width = texture.getTexture().getWidth() / columns;
         int height = texture.getTexture().getHeight() / rows;
 
@@ -102,7 +108,8 @@ public class Animation {
         texture.setRegion(col * width, row * height, width, height);
 
         texture.flip(flipX, !flipY);
-        batch.draw(texture, position.x + offsetX, position.y + offsetY);
+        batch.draw(texture, (position.x * PPM) - (texture.getRegionWidth() / 30), (position.y * PPM) - (texture.getRegionHeight() / 30),
+                texture.getRegionWidth() / 15, texture.getRegionHeight() / 15);
     }
 
     // Getters
@@ -115,6 +122,7 @@ public class Animation {
     public boolean isFinished() { return finished; }
     public int getCurrentFrame() { return currentFrame; }
     public int getTotalFrames() { return totalFrames; }
+    public String getName() { return name; }
 
     // Setters
     public void setPosition(Vector2 position) {
@@ -136,4 +144,9 @@ public class Animation {
         offsetX = x;
         offsetY = y;
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
 }

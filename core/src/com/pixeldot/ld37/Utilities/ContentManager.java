@@ -15,27 +15,29 @@ import java.util.HashMap;
  */
 
 public class ContentManager {
-    private HashMap<String, Texture> textures;
-    private HashMap<String, BitmapFont> fonts;
-    private HashMap<String, Sound> sounds;
-    private HashMap<String, Music> music;
 
-    public ContentManager(){
-        textures = new HashMap<String,Texture>();
-        fonts = new HashMap<String,BitmapFont>();
-        sounds = new HashMap<String,Sound>();
-        music = new HashMap<String,Music>();
+    private static HashMap<String, Texture> textures;
+    private static HashMap<String, BitmapFont> fonts;
+    private static HashMap<String, Sound> sounds;
+    private static HashMap<String, Music> music;
+
+    static {
+        textures = new HashMap<>();
+        fonts = new HashMap<>();
+        sounds = new HashMap<>();
+        music = new HashMap<>();
     }
-    public void loadTexture(String name, String path) {textures.put(name, new Texture("Textures/" +path));}
 
-    public Texture getTexture(String name) {
+    public static void loadTexture(String name, String path) { textures.put(name, new Texture("Textures/" +path)); }
+
+    public static Texture getTexture(String name) {
         if(!textures.containsKey(name))
             throw new IllegalArgumentException("Error: Unknown Texture " + name);
 
         return textures.get(name);
     }
 
-    public void loadFont(String name, String path, int size) {
+    public static void loadFont(String name, String path, int size) {
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("Fonts/" + path));
         FreeTypeFontGenerator.FreeTypeFontParameter param = new FreeTypeFontGenerator.FreeTypeFontParameter();
         param.size = size;
@@ -46,29 +48,29 @@ public class ContentManager {
         generator.dispose();
     }
 
-    public BitmapFont getFont(String name) {
+    public static BitmapFont getFont(String name) {
         if(!fonts.containsKey(name))
             throw new IllegalArgumentException("Error: Unknown Font " + name);
 
         return fonts.get(name);
     }
 
-    public void loadSound(String name, String path) {
+    public static void loadSound(String name, String path) {
         sounds.put(name, Gdx.audio.newSound(Gdx.files.internal("Sounds/" + path)));
     }
 
-    public Sound getSound(String name) {
+    public static Sound getSound(String name) {
         if(!sounds.containsKey(name))
             throw new IllegalArgumentException("Error: Unknown Sound Effect " + name);
 
         return sounds.get(name);
     }
 
-    public void loadMusic(String name, String path) {
+    public static void loadMusic(String name, String path) {
         music.put(name, Gdx.audio.newMusic(Gdx.files.internal("Music/" + path)));
     }
 
-    public Music getMusic(String name) {
+    public static Music getMusic(String name) {
         if(!music.containsKey(name))
             throw new IllegalArgumentException("Error: Unknown Music " + name);
 
