@@ -41,15 +41,15 @@ public class Player {
         a.setPosition(body.getPosition());
 
         if(Gdx.input.isKeyPressed(Input.Keys.A)) {
-            body.applyForceToCenter(-50 / PPM, 0, true);
+            body.applyForceToCenter(-400 / PPM, 0, true);
         }
 
         if(Gdx.input.isKeyPressed(Input.Keys.D)) {
-            body.applyForceToCenter(50 / PPM, 0, true);
+            body.applyForceToCenter(400 / PPM, 0, true);
         }
 
         if(Gdx.input.isKeyPressed(Input.Keys.SPACE) && onGound) {
-            body.applyForceToCenter(0, -600 / PPM, true);
+            body.applyForceToCenter(0, -12000 / PPM, true);
         }
     }
 

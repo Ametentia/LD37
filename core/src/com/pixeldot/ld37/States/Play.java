@@ -22,17 +22,21 @@ public class Play extends State {
 
     private Body boxBody;
     private Animation boxAnim;
+    private BodyDef boxDef;
+    private FixtureDef boxFDef;
 
     private BitmapFont font = new BitmapFont(true);
 
     private CollisionListener contactListener;
+
+    private boolean isThere = true;
 
     public Play(GameStateManager gsm) {
         super(gsm);
 
         world.setContactListener(contactListener = new CollisionListener());
 
-        ContentManager.loadTexture("PlayerStand", "Character/01.png");
+        ContentManager.loadTexture("PlayerStand", "Character/cell01.png");
         ContentManager.loadTexture("Brick", "Materials/brickTexture.png");
 
         createRoom();
@@ -48,6 +52,18 @@ public class Play extends State {
             player.getBody().setTransform(mouse.x, mouse.y, 0);
         }
 
+        if(Gdx.input.isKeyJustPressed(Input.Keys.F)) {
+            if(isThere) {
+                boxBody = world.createBody(boxDef);
+                boxBody.createFixture(boxFDef).setUserData("Floor");
+                isThere = false;
+            }
+            else {
+                world.destroyBody(boxBody);
+                isThere = true;
+            }
+        }
+
 
         world.step(dt, 6, 2);
         player.setOnGound(contactListener.isOnGround());
@@ -60,10 +76,6 @@ public class Play extends State {
 
         batch.setProjectionMatrix(camera.combined);
         renderer.setProjectionMatrix(camera.combined);
-
-        renderer.begin(ShapeRenderer.ShapeType.Line);
-        renderer.circle(player.getCurAnim().getPosition().x * PPM, player.getCurAnim().getPosition().y * PPM, 7);
-        renderer.end();
 
         batch.begin();
         player.render(batch);
@@ -114,40 +126,43 @@ public class Play extends State {
 
         FixtureDef playerFDef = new FixtureDef();
         playerFDef.density = 1;
-        playerFDef.friction = 0.1f;
+        playerFDef.friction = 0.3f;
 
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(14 / PPM, 21 / PPM);
+        shape.setAsBox(30 / PPM, 45 / PPM);
         playerFDef.shape = shape;
 
         playerBody.createFixture(playerFDef);
 
-        shape.setAsBox(4 / PPM, 4 / PPM, new Vector2(0, 21 / PPM), 0);
+        shape.setAsBox(16 / PPM, 8 / PPM, new Vector2(0, 49 / PPM), 0);
         playerFDef.isSensor = true;
 
         playerBody.createFixture(playerFDef).setUserData("Foot");
 
         Animation a = new Animation("Stand", ContentManager.getTexture("PlayerStand"), 1, 1);
-        a.setOffset(-7, -10.5f);
+        a.setTargetWidth(60);
+        a.setTargetHeight(90);
 
         player = new Player(playerBody, a);
 
         shape.dispose();
 
-        BodyDef boxDef = new BodyDef();
+        boxDef = new BodyDef();
         boxDef.type = BodyDef.BodyType.StaticBody;
         boxDef.position.set(200 / PPM, (HEIGHT - 300) / PPM);
 
         boxBody = world.createBody(boxDef);
 
-        FixtureDef fixtureDef = new FixtureDef();
+        boxFDef = new FixtureDef();
 
         PolygonShape box = new PolygonShape();
         box.setAsBox(100 / PPM, 100 / PPM);
-        fixtureDef.shape = box;
+        boxFDef.shape = box;
 
-        boxBody.createFixture(fixtureDef);
+        boxBody.createFixture(boxFDef).setUserData("Floor");
 
         boxAnim = new Animation("Brick", ContentManager.getTexture("Brick"), 1, 1);
+        boxAnim.setTargetWidth(200);
+        boxAnim.setTargetHeight(200);
     }
 }

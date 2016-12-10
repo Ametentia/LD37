@@ -13,6 +13,9 @@ import static com.pixeldot.ld37.Game.PPM;
 public class Animation {
     private Vector2 position;
 
+    private float targetWidth;
+    private float targetHeight;
+
     private String name;
 
     private TextureRegion texture;
@@ -71,6 +74,8 @@ public class Animation {
         maxPlays = -1;
 
         offsetX = offsetY = 0;
+        targetWidth = texture.getWidth() / columns;
+        targetHeight = texture.getHeight() / rows;
     }
 
     /**
@@ -108,8 +113,8 @@ public class Animation {
         texture.setRegion(col * width, row * height, width, height);
 
         texture.flip(flipX, !flipY);
-        batch.draw(texture, (position.x * PPM) - (texture.getRegionWidth() / 30), (position.y * PPM) - (texture.getRegionHeight() / 30),
-                texture.getRegionWidth() / 15, texture.getRegionHeight() / 15);
+        batch.draw(texture, (position.x * PPM) - (targetWidth / 2), (position.y * PPM) - (targetHeight / 2),
+                targetWidth, targetHeight);
     }
 
     // Getters
@@ -148,5 +153,8 @@ public class Animation {
     public void setName(String name) {
         this.name = name;
     }
+
+    public void setTargetWidth(float width) { targetWidth = width; }
+    public void setTargetHeight(float height) { targetHeight = height; }
 
 }
