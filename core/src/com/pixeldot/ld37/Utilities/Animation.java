@@ -11,7 +11,6 @@ import static com.pixeldot.ld37.Game.PPM;
  * An exact copy from last LD
  */
 public class Animation {
-    private Vector2 position;
 
     private float targetWidth;
     private float targetHeight;
@@ -38,6 +37,9 @@ public class Animation {
     private float offsetX;
     private float offsetY;
 
+    private int startFrame;
+    private int endFrame;
+
     /**
      * Creates an animation from a texture
      * @param texture The texture to represent the animation
@@ -63,10 +65,9 @@ public class Animation {
         this.name = name;
 
         totalFrames = rows * columns;
+        endFrame = totalFrames;
 
         this.timePerFrame = timePerFrame;
-
-        position = new Vector2();
 
         flipX = flipY = false;
 
@@ -76,6 +77,7 @@ public class Animation {
         offsetX = offsetY = 0;
         targetWidth = texture.getWidth() / columns;
         targetHeight = texture.getHeight() / rows;
+        startFrame=0;
     }
 
     /**
@@ -89,8 +91,8 @@ public class Animation {
             sinceLastFrame -= timePerFrame;
 
             currentFrame++;
-            if (currentFrame == totalFrames) {
-                currentFrame = 1;
+            if (currentFrame == endFrame) {
+                currentFrame = startFrame;
                 totalPlays++;
                 if(totalPlays == maxPlays) {
                     finished = true;
@@ -103,7 +105,7 @@ public class Animation {
      * Draws the animation on the screen on its current frame
      * @param batch The Sprite Batch used to render the texture on screen
      */
-    public void render(SpriteBatch batch) {
+    public void render(SpriteBatch batch, Vector2 position) {
         int width = texture.getTexture().getWidth() / columns;
         int height = texture.getTexture().getHeight() / rows;
 
@@ -119,7 +121,6 @@ public class Animation {
 
     // Getters
     public TextureRegion getTexture() { return texture; }
-    public Vector2 getPosition() { return new Vector2(position.x + offsetX, position.y + offsetY); }
     public int getRows() { return rows; }
     public int getColumns() { return columns; }
     public boolean isFlipX() { return flipX; }
@@ -130,9 +131,6 @@ public class Animation {
     public String getName() { return name; }
 
     // Setters
-    public void setPosition(Vector2 position) {
-        this.position.set(position);
-    }
     public void setTimePerFrame(float time) {
         timePerFrame = time;
     }
@@ -157,4 +155,14 @@ public class Animation {
     public void setTargetWidth(float width) { targetWidth = width; }
     public void setTargetHeight(float height) { targetHeight = height; }
 
+    public int getStartFrame() {return startFrame;}
+    public void setStartFrame(int startFrame) {this.startFrame = startFrame;}
+
+    public int getEndFrame() {
+        return endFrame;
+    }
+
+    public void setEndFrame(int endFrame) {
+        this.endFrame = endFrame;
+    }
 }

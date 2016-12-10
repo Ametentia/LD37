@@ -6,6 +6,7 @@ import com.pixeldot.ld37.States.Play;
 public class CollisionListener implements ContactListener {
 
     private boolean onGround;
+    private boolean playerPushing;
 
     @Override
     public void beginContact(Contact contact) {
@@ -19,6 +20,13 @@ public class CollisionListener implements ContactListener {
         }
         else if (a.getUserData().equals("Floor") && b.getUserData().equals("Foot")) {
             onGround = true;
+        }
+
+        if(a.getUserData().equals("PlayerMain") && b.getUserData().equals("Wall")){
+            playerPushing=true;
+        }
+        else if(a.getUserData().equals("Wall") && b.getUserData().equals("PlayerMain")){
+            playerPushing=true;
         }
     }
 
@@ -35,6 +43,12 @@ public class CollisionListener implements ContactListener {
         else if (a.getUserData().equals("Floor") && b.getUserData().equals("Foot")) {
             onGround = false;
         }
+        if(a.getUserData().equals("PlayerMain") && b.getUserData().equals("Wall")){
+            playerPushing=false;
+        }
+        else if(a.getUserData().equals("Wall") && b.getUserData().equals("PlayerMain")){
+            playerPushing=false;
+        }
     }
 
     @Override
@@ -48,4 +62,5 @@ public class CollisionListener implements ContactListener {
     }
 
     public boolean isOnGround() { return onGround; }
+    public boolean isPlayerPushing() {return playerPushing;}
 }
