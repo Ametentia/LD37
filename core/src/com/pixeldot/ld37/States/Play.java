@@ -40,15 +40,15 @@ public class Play extends State {
         }
 
         if(Gdx.input.isKeyPressed(Input.Keys.A)) {
-            player.applyForceToCenter(-20 / PPM, 0, true);
+            player.applyForceToCenter(-50 / PPM, 0, true);
         }
 
         if(Gdx.input.isKeyPressed(Input.Keys.D)) {
-            player.applyForceToCenter(20 / PPM, 0, true);
+            player.applyForceToCenter(50 / PPM, 0, true);
         }
 
         if(Gdx.input.isKeyPressed(Input.Keys.SPACE) && bodyOnGround) {
-            player.applyForceToCenter(0, -450 / PPM, true);
+            player.applyForceToCenter(0, -600 / PPM, true);
         }
 
         world.step(dt, 6, 2);
@@ -100,6 +100,7 @@ public class Play extends State {
         playerDef.active = true;
         playerDef.allowSleep = true;
         playerDef.fixedRotation = true;
+        playerDef.linearDamping = 2;
 
         player = world.createBody(playerDef);
 
