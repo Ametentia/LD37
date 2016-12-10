@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.physics.box2d.joints.DistanceJointDef;
+import com.badlogic.gdx.physics.box2d.joints.WeldJointDef;
 import com.pixeldot.ld37.Entities.Player;
 import com.pixeldot.ld37.Utilities.Animation;
 import com.pixeldot.ld37.Utilities.CollisionListener;
@@ -36,6 +38,8 @@ public class Play extends State {
 
     private boolean isThere = true;
     private ArrayList<WorldObject> worldObjects;
+    private boolean jointMade;
+    private Joint joint;
 
     public Play(GameStateManager gsm) {
         super(gsm);
@@ -61,18 +65,28 @@ public class Play extends State {
             player.getBody().setTransform(mouse.x, mouse.y, 0);
         }
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.F)) {
-            if (isThere) {
-                boxBody = world.createBody(boxDef);
-                boxBody.createFixture(boxFDef).setUserData("Floor");
-                isThere = false;
-            } else {
-                world.destroyBody(boxBody);
-                isThere = true;
+        for(WorldObject wo: worldObjects) {
+            wo.update(dt);
+            if(wo instanceof Box){
+                if(((Box) wo).isBeingPulled()) {
+                    if (!jointMade) {
+                        DistanceJointDef def = new DistanceJointDef();
+                        def.type = JointDef.JointType.DistanceJoint;
+                        def.bodyA = player.getBody();
+                        def.bodyB = ((Box) wo).getBody();
+                        def.collideConnected = true;
+                        def.length = 78/PPM;
+                        joint = world.createJoint(def);
+                        jointMade = true;
+                    }
+                }
+                else if(jointMade)
+                {
+                    jointMade=false;
+                    world.destroyJoint(joint);
+                }
             }
         }
-        for(WorldObject wo: worldObjects)
-            wo.update(dt);
 
         world.step(dt, 6, 2);
         player.setOnGound(contactListener.isOnGround());
@@ -91,7 +105,7 @@ public class Play extends State {
 
         font.draw(batch, "On Ground: " + player.isOnGound(), 100, 100);
         batch.end();
-        debugRenderer.render(world, box2DCam.combined);
+        //debugRenderer.render(world, box2DCam.combined);
     }
 
     public void dispose() {}

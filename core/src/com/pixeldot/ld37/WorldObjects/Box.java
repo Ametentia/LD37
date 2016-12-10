@@ -17,11 +17,15 @@ public class Box implements WorldObject{
     private Animation animation;
     private ContentManager content;
     private CollisionListener collisions;
-    public static int globalBoxId;
+    private World world;
+    private boolean beingPulled;
+
+    public static int globalBoxId = 0;
     private int id;
 
     public Box(World w, String textureKey, Vector2 position, CollisionListener col){
         collisions=col;
+        world=w;
         BodyDef bodydef = new BodyDef();
         bodydef.position.set(position);
         bodydef.type = BodyDef.BodyType.DynamicBody;
@@ -40,17 +44,17 @@ public class Box implements WorldObject{
 
         body.createFixture(blockFDef).setUserData("Floor");
 
-        shape.setAsBox(10 / PPM, 45 / PPM,new Vector2(45/PPM,0),0);
+        shape.setAsBox(10 / PPM, 20 / PPM,new Vector2(45/PPM,0),0);
         blockFDef.shape = shape;
         blockFDef.isSensor=true;
 
         body.createFixture(blockFDef).setUserData("BoxRight_"+globalBoxId);
 
-        shape.setAsBox(-10 / PPM, 45 / PPM,new Vector2(-45/PPM,0),0);
+        shape.setAsBox(-10 / PPM, 20 / PPM,new Vector2(-45/PPM,0),0);
         blockFDef.shape = shape;
         blockFDef.isSensor=true;
 
-        body.createFixture(blockFDef).setUserData("BoxRight_"+globalBoxId);
+        body.createFixture(blockFDef).setUserData("BoxLeft_"+globalBoxId);
 
         id= globalBoxId;
         globalBoxId++;
@@ -59,7 +63,6 @@ public class Box implements WorldObject{
         animation.setTargetWidth(90);
         animation.setTargetHeight(90);
     }
-
     @Override
     public void render(SpriteBatch batch) {
         animation.render(batch,body.getPosition());
@@ -68,9 +71,15 @@ public class Box implements WorldObject{
     @Override
     public void update(float delta) {
         if(Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)){
-            if(collisions.getPlayerBoxPulling() == id){
-                System.out.println("Pulling box "+id);
+            if(collisions.getPlayerBoxPulling()==id){
+                beingPulled=true;
             }
         }
+        else
+        {
+            beingPulled=false;
+        }
     }
+    public boolean isBeingPulled(){return beingPulled;}
+    public Body getBody() { return body; }
 }
