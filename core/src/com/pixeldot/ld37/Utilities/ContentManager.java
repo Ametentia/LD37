@@ -15,10 +15,10 @@ import java.util.HashMap;
  */
 
 public class ContentManager {
-    private HashMap<String, Texture> textures;
-    private HashMap<String, BitmapFont> fonts;
-    private HashMap<String, Sound> sounds;
-    private HashMap<String, Music> music;
+    private static HashMap<String, Texture> textures;
+    private static HashMap<String, BitmapFont> fonts;
+    private static HashMap<String, Sound> sounds;
+    private static HashMap<String, Music> music;
 
     public ContentManager(){
         textures = new HashMap<String,Texture>();
