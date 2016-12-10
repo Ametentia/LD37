@@ -31,6 +31,7 @@ public class Game extends ApplicationAdapter {
 
     private World world;
     private Box2DDebugRenderer debugRenderer;
+    private Viewport debugViewport;
     private OrthographicCamera box2DCam;
 
     private SpriteBatch batch;
@@ -51,6 +52,9 @@ public class Game extends ApplicationAdapter {
         world = new World(new Vector2(0, 9.81f), true);
         box2DCam = new OrthographicCamera();
         box2DCam.setToOrtho(true, WIDTH / PPM, HEIGHT / PPM);
+
+        debugViewport = new ExtendViewport(WIDTH / PPM, HEIGHT / PPM, box2DCam);
+        debugViewport.apply();
 
         batch = new SpriteBatch();
         renderer = new ShapeRenderer();
@@ -80,6 +84,7 @@ public class Game extends ApplicationAdapter {
     @Override
     public void resize(int width, int height) {
         viewport.update(width, height, true);
+        debugViewport.update(width, height, true);
     }
 
     @Override
