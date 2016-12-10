@@ -69,7 +69,7 @@ public class Box implements WorldObject{
     public void update(float delta) {
         if(Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)){
             if(collisions.getPlayerBoxPulling() == id){
-                //code to move the box i just cba
+                System.out.println("Pulling box "+id);
             }
         }
     }

@@ -177,7 +177,7 @@ public class Play extends State {
 
         boxBody = world.createBody(boxDef);
 
-        worldObjects.add(new Box(world,"Brick",new Vector2(150/PPM,50/PPM)));
-        worldObjects.add(new Box(world,"Brick",new Vector2(500/PPM,50/PPM)));
+        worldObjects.add(new Box(world,"Brick",new Vector2(150/PPM,50/PPM),contactListener));
+        worldObjects.add(new Box(world,"Brick",new Vector2(500/PPM,50/PPM),contactListener));
     }
 }

@@ -29,6 +29,7 @@ public class CollisionListener implements ContactListener {
         else if(a.getUserData().equals("Wall") && b.getUserData().equals("PlayerMain")){
             playerPushing=true;
         }
+        playerBoxPulling=0;
         if(a.getUserData().equals("PlayerMain")){
             if((b.getUserData()).toString().startsWith("BoxRight")){
                 playerBoxPulling=Integer.parseInt(b.getUserData().toString().replaceAll("BoxRight_",""));
