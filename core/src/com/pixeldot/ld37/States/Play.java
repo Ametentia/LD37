@@ -37,6 +37,7 @@ public class Play extends State {
         world.setContactListener(contactListener = new CollisionListener());
 
         ContentManager.loadTexture("PlayerRun", "Character/spritesheetSmol.png");
+        ContentManager.loadTexture("PlayerWall", "Character/pushSpriteSheet.png");
         ContentManager.loadTexture("Brick", "Materials/brickTexture.png");
 
         createRoom();
@@ -45,20 +46,19 @@ public class Play extends State {
 
     public void update(float dt) {
 
-        if(Gdx.input.isTouched()) {
+        if (Gdx.input.isTouched()) {
             mouse.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             box2DCam.unproject(mouse);
 
             player.getBody().setTransform(mouse.x, mouse.y, 0);
         }
 
-        if(Gdx.input.isKeyJustPressed(Input.Keys.F)) {
-            if(isThere) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F)) {
+            if (isThere) {
                 boxBody = world.createBody(boxDef);
                 boxBody.createFixture(boxFDef).setUserData("Floor");
                 isThere = false;
-            }
-            else {
+            } else {
                 world.destroyBody(boxBody);
                 isThere = true;
             }
@@ -68,7 +68,6 @@ public class Play extends State {
         world.step(dt, 6, 2);
         player.setOnGound(contactListener.isOnGround());
         player.update(dt);
-        boxAnim.setPosition(boxBody.getPosition());
         boxAnim.update(dt);
     }
 
@@ -79,7 +78,7 @@ public class Play extends State {
 
         batch.begin();
         player.render(batch);
-        boxAnim.render(batch);
+        boxAnim.render(batch, boxBody.getPosition());
         font.draw(batch, "On Ground: " + player.isOnGound(), 100, 100);
         batch.end();
         debugRenderer.render(world, box2DCam.combined);
@@ -103,13 +102,14 @@ public class Play extends State {
         room.createFixture(fdef).setUserData("Floor");
 
         shape.setAsBox(20 / PPM, HEIGHT / PPM, new Vector2(((-WIDTH / 2) + 10) / PPM, 0), 0);
-        room.createFixture(fdef);
+        room.createFixture(fdef).setUserData("Wall");
+
 
         shape.setAsBox(20 / PPM, HEIGHT / PPM, new Vector2(((WIDTH / 2) - 10) / PPM, 0), 0);
-        room.createFixture(fdef);
+        room.createFixture(fdef).setUserData("Wall");
 
         shape.setAsBox(WIDTH / PPM, 20 / PPM, new Vector2(0, ((-HEIGHT / 2) - 10) / PPM), 0);
-        room.createFixture(fdef);
+        room.createFixture(fdef).setUserData("Wall");
 
         shape.dispose();
     }
@@ -131,19 +131,34 @@ public class Play extends State {
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(30 / PPM, 45 / PPM);
         playerFDef.shape = shape;
-
-        playerBody.createFixture(playerFDef);
+        playerBody.createFixture(playerFDef).setUserData("PlayerMain");
 
         shape.setAsBox(16 / PPM, 8 / PPM, new Vector2(0, 49 / PPM), 0);
         playerFDef.isSensor = true;
 
         playerBody.createFixture(playerFDef).setUserData("Foot");
 
+        shape.setAsBox(8 / PPM, 16 / PPM, new Vector2(30/PPM, 0 / PPM), 0);
+        playerFDef.isSensor = true;
+
+       /* playerBody.createFixture(playerFDef).setUserData("PlayerRight");
+
+        shape.setAsBox(8 / PPM, 16 / PPM, new Vector2(-30/PPM, 0 / PPM), 0);
+        playerFDef.isSensor = true;
+
+        playerBody.createFixture(playerFDef).setUserData("PlayerLeft");*/
+
         Animation a = new Animation("Run", ContentManager.getTexture("PlayerRun"), 2, 4);
         a.setTargetWidth(60);
         a.setTargetHeight(90);
 
-        player = new Player(playerBody, a);
+        player = new Player(playerBody,contactListener, a);
+
+        a = new Animation("SquishFace",ContentManager.getTexture("PlayerWall"), 2,4);
+        a.setEndFrame(6);
+        a.setTargetWidth(60);
+        a.setTargetHeight(90);
+        player.addAnimation(a);
 
         shape.dispose();
 
