@@ -1,38 +1,37 @@
 package com.pixeldot.ld37.States;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.joints.DistanceJointDef;
-import com.badlogic.gdx.physics.box2d.joints.WeldJointDef;
 import com.pixeldot.ld37.Entities.Player;
+import com.pixeldot.ld37.Entities.WorldObject;
+import com.pixeldot.ld37.Entities.WorldObjects.Block;
+import com.pixeldot.ld37.Entities.WorldObjects.Box;
+import com.pixeldot.ld37.Entities.WorldObjects.Switch;
 import com.pixeldot.ld37.Utilities.Animation;
 import com.pixeldot.ld37.Utilities.CollisionListener;
 import com.pixeldot.ld37.Utilities.ContentManager;
 import com.pixeldot.ld37.Utilities.GameStateManager;
-import com.pixeldot.ld37.WorldObjects.Block;
-import com.pixeldot.ld37.WorldObjects.Switch;
-import com.pixeldot.ld37.WorldObjects.Box;
-import com.pixeldot.ld37.WorldObjects.WorldObject;
 
 import java.util.ArrayList;
 
-import static com.pixeldot.ld37.Game.WIDTH;
-import static com.pixeldot.ld37.Game.HEIGHT;
-import static com.pixeldot.ld37.Game.PPM;
+import static com.pixeldot.ld37.Game.*;
 
 public class Play extends State {
-    //todo Level loading
-    //todo make a handle input method
-    //todo better triggers
-    //todo buttons
-    //todo changing level animations
-    //todo Aisu walking around the level
-    //todo doors
-    //todo locks?
+    // TODO Level loading
+    // TODO make a handle input method
+    // TODO better triggers
+    // TODO buttons
+    // TODO changing level animations
+    // TODO Aisu walking around the level
+    // TODO doors
+    // TODO locks?
+
+    private Texture background, backgroundRice;
+    private Texture backgroundLeft, backgroundRight;
 
     private Player player;
 
@@ -59,13 +58,18 @@ public class Play extends State {
         ContentManager.loadTexture("PlayerWall", "Character/pushSpriteSheet.png");
         ContentManager.loadTexture("PlayerIdle", "Character/idleSpriteSheet.png");
         ContentManager.loadTexture("Rice", "Materials/SpringSummerAutumnBackground.png");
-        ContentManager.loadTexture("background", "Materials/Background.png");
+        ContentManager.loadTexture("Background", "Materials/Background.png");
         ContentManager.loadTexture("LeftAutumn", "Side Panels/autumnLeftSlide.png");
         ContentManager.loadTexture("RightAutumn", "Side Panels/autumnRightSlide.png");
 
 
         ContentManager.loadTexture("Brick", "Materials/brickTexture.png");
 
+
+        background = ContentManager.getTexture("Background");
+        backgroundRice = ContentManager.getTexture("Rice");
+        backgroundLeft = ContentManager.getTexture("LeftAutumn");
+        backgroundRight = ContentManager.getTexture("RightAutumn");
 
 
         createRoom();
@@ -96,7 +100,7 @@ public class Play extends State {
         for(WorldObject wo: worldObjects) {
             wo.update(dt);
             if(wo instanceof Box){
-                if(((Box) wo).isBeingPulled()) {
+                /*if(((Box) wo).isBeingPulled()) {
                     if (!jointMade) {
                         DistanceJointDef def = new DistanceJointDef();
                         def.type = JointDef.JointType.DistanceJoint;
@@ -112,12 +116,11 @@ public class Play extends State {
                 {
                     jointMade=false;
                     world.destroyJoint(joint);
-                }
+                }*/
             }
         }
 
         world.step(dt, 6, 2);
-        player.setOnGound(contactListener.isOnGround());
         player.update(dt);
     }
 
@@ -131,22 +134,17 @@ public class Play extends State {
         back.setTargetHeight(720);
 
         batch.begin();
-        back.render(batch,new Vector2(640/PPM,360/PPM));
-        back = new Animation("",ContentManager.getTexture("background"),1,1);
-        back.setFlipY(false);
-        back.setTargetWidth(1280);
-        back.setTargetHeight(720);
-        back.render(batch, new Vector2(639/PPM,360/PPM));
-        back = new Animation("",ContentManager.getTexture("LeftAutumn"),1,1);
-        back.setFlipY(false);
-        back.setTargetWidth(252);
-        back.setTargetHeight(720);
-        back.render(batch,new Vector2(126/PPM,360/PPM));
-        back = new Animation("",ContentManager.getTexture("RightAutumn"),1,1);
-        back.setFlipY(false);
-        back.setTargetWidth(252);
-        back.setTargetHeight(720);
-        back.render(batch,new Vector2((1280-126)/PPM,360/PPM));
+        batch.draw(backgroundRice, 0, 0, WIDTH, HEIGHT,
+                0, 0, backgroundRice.getWidth(), backgroundRice.getHeight(), false, true);
+
+        batch.draw(background, 0, 0, WIDTH, HEIGHT,
+                0, 0, background.getWidth(), background.getHeight(), false, true);
+
+        batch.draw(backgroundLeft, 0, 0, backgroundLeft.getWidth() / 1.5f, HEIGHT,
+                0, 0, backgroundLeft.getWidth(), backgroundLeft.getHeight(), false, true);
+
+        batch.draw(backgroundRight, (1161 + 378) / 1.5f, 0, backgroundRight.getWidth() / 1.5f, HEIGHT,
+                0, 0, backgroundRight.getWidth(), backgroundRight.getHeight(), false, true);
 
         player.render(batch);
         for(WorldObject wo: worldObjects)
@@ -182,11 +180,11 @@ public class Play extends State {
         shape.setAsBox(WIDTH / PPM, 40 / PPM, new Vector2(0, ((-HEIGHT / 2) - 10) / PPM), 0); //ceiling
         room.createFixture(fdef).setUserData("Wall");
 
-        Block block = new Block(world, new Vector2(700 / PPM, (HEIGHT - 50) / PPM), "Brick");
-        Switch aSwitch = new Switch(world, new Vector2(400 / PPM, (HEIGHT - 50) / PPM), block);
+      //  Block block = new Block(world, new Vector2(700 / PPM, (HEIGHT - 50) / PPM), "Brick");
+     //   Switch aSwitch = new Switch(world, new Vector2(400 / PPM, (HEIGHT - 50) / PPM), block);
 
-        worldObjects.add(block);
-        worldObjects.add(aSwitch);
+       // worldObjects.add(block);
+       // worldObjects.add(aSwitch);
 
         shape.dispose();
     }
@@ -223,7 +221,7 @@ public class Play extends State {
         a.setTargetWidth(60);
         a.setTargetHeight(90);
 
-        player = new Player(playerBody,contactListener, a);
+        player = new Player(playerBody, a);
 
         a = new Animation("SquishFace",ContentManager.getTexture("PlayerWall"), 2,4);
         a.setEndFrame(6);
@@ -245,6 +243,6 @@ public class Play extends State {
         boxBody = world.createBody(boxDef);
 
         //worldObjects.add(new Box(world,"Brick",new Vector2(150/PPM,50/PPM),contactListener));
-        worldObjects.add(new Box(world,"Brick",new Vector2(500/PPM,50/PPM),contactListener));
+      //  worldObjects.add(new Box(world,"Brick",new Vector2(500/PPM,50/PPM),contactListener));
     }
 }
