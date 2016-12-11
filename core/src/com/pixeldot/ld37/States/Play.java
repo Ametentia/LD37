@@ -26,6 +26,7 @@ import static com.pixeldot.ld37.Game.PPM;
 
 public class Play extends State {
     //todo Level loading
+    //todo make a handle input method
     //todo better triggers
     //todo buttons
     //todo changing level animations
