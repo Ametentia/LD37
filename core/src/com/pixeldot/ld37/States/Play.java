@@ -146,7 +146,7 @@ public class Play extends State {
         block.render(batch);
         font.draw(batch, "On Ground: " + player.isOnGound(), 100, 100);
         batch.end();
-        debugRenderer.render(world, box2DCam.combined);
+        //debugRenderer.render(world, box2DCam.combined);
     }
 
     public void dispose() {}
