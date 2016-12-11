@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.pixeldot.ld37.Utilities.Animation;
 import com.pixeldot.ld37.Utilities.CollisionListener;
@@ -84,8 +85,8 @@ public class Player extends WorldObject {
         animations.get(currentAnimation).render(batch, body.getPosition());
     }
 
-    public void onCollisionBegin(WorldObject worldObject, Fixture fixture) {}
-    public void onCollisionEnd(WorldObject worldObject, Fixture fixture) {}
+    public void onCollisionBegin(WorldObject worldObject, Contact contact) {}
+    public void onCollisionEnd(WorldObject worldObject, Contact contact) {}
 
     public void dispose() {}
 

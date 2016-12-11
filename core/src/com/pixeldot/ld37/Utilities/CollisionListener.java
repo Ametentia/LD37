@@ -15,6 +15,10 @@ public class CollisionListener implements ContactListener {
 
     private HashMap<String, WorldObject> worldObjects;
 
+    public CollisionListener() {
+        this.worldObjects = new HashMap<>();
+    }
+
     /**
      * Will run the onCollisionBegin method for registered WorldObjects
      * @param contact The collision information
@@ -38,8 +42,8 @@ public class CollisionListener implements ContactListener {
         WorldObject objectA = worldObjects.get(a.getUserData().toString());
         WorldObject objectB = worldObjects.get(b.getUserData().toString());
 
-        objectA.onCollisionBegin(objectB, contact.getFixtureB());
-        objectB.onCollisionBegin(objectA, contact.getFixtureA());
+        objectA.onCollisionBegin(objectB, contact);
+        objectB.onCollisionBegin(objectA, contact);
 
         /*Fixture a = contact.getFixtureA();
         Fixture b = contact.getFixtureB();
@@ -107,8 +111,8 @@ public class CollisionListener implements ContactListener {
         WorldObject objectA = worldObjects.get(a.getUserData().toString());
         WorldObject objectB = worldObjects.get(b.getUserData().toString());
 
-        objectA.onCollisionEnd(objectB, contact.getFixtureB());
-        objectB.onCollisionEnd(objectA, contact.getFixtureA());
+        objectA.onCollisionEnd(objectB, contact);
+        objectB.onCollisionEnd(objectA, contact);
 
         /*Fixture a = contact.getFixtureA();
         Fixture b = contact.getFixtureB();
