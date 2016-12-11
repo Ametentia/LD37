@@ -6,11 +6,20 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.physics.box2d.joints.DistanceJointDef;
+import com.badlogic.gdx.physics.box2d.joints.WeldJointDef;
 import com.pixeldot.ld37.Entities.Player;
 import com.pixeldot.ld37.Utilities.Animation;
 import com.pixeldot.ld37.Utilities.CollisionListener;
 import com.pixeldot.ld37.Utilities.ContentManager;
 import com.pixeldot.ld37.Utilities.GameStateManager;
+import com.pixeldot.ld37.WorldObjects.Block;
+import com.pixeldot.ld37.WorldObjects.Switch;
+import com.pixeldot.ld37.WorldObjects.Box;
+import com.pixeldot.ld37.WorldObjects.WorldObject;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 import static com.pixeldot.ld37.Game.WIDTH;
 import static com.pixeldot.ld37.Game.HEIGHT;
@@ -29,17 +38,25 @@ public class Play extends State {
 
     private CollisionListener contactListener;
 
-    private boolean isThere = true;
+    private Switch aSwitch;
+    private Block block;
+    private ArrayList<WorldObject> worldObjects;
+    private boolean jointMade;
+    private Joint joint;
 
     public Play(GameStateManager gsm) {
         super(gsm);
 
         world.setContactListener(contactListener = new CollisionListener());
+        worldObjects = new ArrayList<>();
 
         ContentManager.loadTexture("PlayerRun", "Character/spritesheetSmol.png");
         ContentManager.loadTexture("PlayerWall", "Character/pushSpriteSheet.png");
         ContentManager.loadTexture("PlayerIdle", "Character/idleSpriteSheet.png");
         ContentManager.loadTexture("Brick", "Materials/brickTexture.png");
+
+        block = new Block(world, new Vector2(700 / PPM, (HEIGHT - 50) / PPM), "Brick");
+        aSwitch = new Switch(world, new Vector2(400 / PPM, (HEIGHT - 50) / PPM), block);
 
         createRoom();
         createPlayer();
@@ -54,22 +71,38 @@ public class Play extends State {
             player.getBody().setTransform(mouse.x, mouse.y, 0);
         }
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.F)) {
-            if (isThere) {
-                boxBody = world.createBody(boxDef);
-                boxBody.createFixture(boxFDef).setUserData("Floor");
-                isThere = false;
-            } else {
-                world.destroyBody(boxBody);
-                isThere = true;
-            }
+        block.update(dt);
+
+        if(contactListener.isSwitch() && Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+            aSwitch.flick();
         }
 
+        for(WorldObject wo: worldObjects) {
+            wo.update(dt);
+            if(wo instanceof Box){
+                if(((Box) wo).isBeingPulled()) {
+                    if (!jointMade) {
+                        DistanceJointDef def = new DistanceJointDef();
+                        def.type = JointDef.JointType.DistanceJoint;
+                        def.bodyA = player.getBody();
+                        def.bodyB = ((Box) wo).getBody();
+                        def.collideConnected = true;
+                        def.length = 78/PPM;
+                        joint = world.createJoint(def);
+                        jointMade = true;
+                    }
+                }
+                else if(jointMade)
+                {
+                    jointMade=false;
+                    world.destroyJoint(joint);
+                }
+            }
+        }
 
         world.step(dt, 6, 2);
         player.setOnGound(contactListener.isOnGround());
         player.update(dt);
-        boxAnim.update(dt);
     }
 
     public void render() {
@@ -79,7 +112,12 @@ public class Play extends State {
 
         batch.begin();
         player.render(batch);
-        boxAnim.render(batch, boxBody.getPosition());
+        for(WorldObject wo: worldObjects)
+            wo.render(batch);
+
+
+
+        block.render(batch);
         font.draw(batch, "On Ground: " + player.isOnGound(), 100, 100);
         batch.end();
         debugRenderer.render(world, box2DCam.combined);
@@ -142,12 +180,6 @@ public class Play extends State {
         shape.setAsBox(8 / PPM, 16 / PPM, new Vector2(30/PPM, 0 / PPM), 0);
         playerFDef.isSensor = true;
 
-       /* playerBody.createFixture(playerFDef).setUserData("PlayerRight");
-
-        shape.setAsBox(8 / PPM, 16 / PPM, new Vector2(-30/PPM, 0 / PPM), 0);
-        playerFDef.isSensor = true;
-
-        playerBody.createFixture(playerFDef).setUserData("PlayerLeft");*/
 
         Animation a = new Animation("Run", ContentManager.getTexture("PlayerRun"), 2, 4);
         a.setTargetWidth(60);
@@ -169,21 +201,12 @@ public class Play extends State {
         shape.dispose();
 
         boxDef = new BodyDef();
-        boxDef.type = BodyDef.BodyType.StaticBody;
+        boxDef.type = BodyDef.BodyType.DynamicBody;
         boxDef.position.set(200 / PPM, (HEIGHT - 300) / PPM);
 
         boxBody = world.createBody(boxDef);
 
-        boxFDef = new FixtureDef();
-
-        PolygonShape box = new PolygonShape();
-        box.setAsBox(100 / PPM, 100 / PPM);
-        boxFDef.shape = box;
-
-        boxBody.createFixture(boxFDef).setUserData("Floor");
-
-        boxAnim = new Animation("Brick", ContentManager.getTexture("Brick"), 1, 1);
-        boxAnim.setTargetWidth(200);
-        boxAnim.setTargetHeight(200);
+        worldObjects.add(new Box(world,"Brick",new Vector2(150/PPM,50/PPM),contactListener));
+        worldObjects.add(new Box(world,"Brick",new Vector2(500/PPM,50/PPM),contactListener));
     }
 }
