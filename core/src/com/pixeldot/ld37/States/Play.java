@@ -71,6 +71,9 @@ public class Play extends State {
         createRoom();
         createPlayer();
     }
+    public void loadSounds(){
+        ContentManager.loadSound("Jump1","Sounds/Jumps/finger_jump_1.wav");
+    }
 
     public void update(float dt) {
 
