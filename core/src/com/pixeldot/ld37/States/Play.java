@@ -25,6 +25,13 @@ import static com.pixeldot.ld37.Game.HEIGHT;
 import static com.pixeldot.ld37.Game.PPM;
 
 public class Play extends State {
+    //todo Level loading
+    //todo better triggers
+    //todo buttons
+    //todo changing level animations
+    //todo Aisu walking around the level
+    //todo doors
+    //todo locks?
 
     private Player player;
 

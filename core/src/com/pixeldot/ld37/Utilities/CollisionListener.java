@@ -41,7 +41,6 @@ public class CollisionListener implements ContactListener {
             isSwitch = true;
         }
 
-        playerBoxPulling=-1;
         if(a.getUserData().equals("PlayerMain")) {
             if ((b.getUserData()).toString().startsWith("BoxRight")) {
                 playerBoxPulling = Integer.parseInt(b.getUserData().toString().replaceAll("BoxRight_", ""));
