@@ -38,12 +38,12 @@ public class Block implements WorldObject, Triggerable {
 
     public void triggerOn() {
         // Do Stuffs
-        body.setLinearVelocity(0, 20 / PPM);
+        body.setLinearVelocity(0, 500 / PPM);
         isOn = true;
     }
 
     public void triggerOff() {
-        body.setLinearVelocity(0, -20 / PPM);
+        body.setLinearVelocity(0, -500 / PPM);
         isOn = false;
     }
 

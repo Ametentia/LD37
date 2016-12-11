@@ -2,7 +2,6 @@ package com.pixeldot.ld37.WorldObjects;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
@@ -15,12 +14,11 @@ import static com.pixeldot.ld37.Game.PPM;
 public class Box implements WorldObject{
     private Body body;
     private Animation animation;
-    private ContentManager content;
     private CollisionListener collisions;
     private World world;
     private boolean beingPulled;
 
-    public static int globalBoxId = 0;
+    public static int globalBoxId = 1;
     private int id;
 
     public Box(World w, String textureKey, Vector2 position, CollisionListener col){
@@ -44,17 +42,18 @@ public class Box implements WorldObject{
 
         body.createFixture(blockFDef).setUserData("Floor");
 
-        shape.setAsBox(10 / PPM, 20 / PPM,new Vector2(45/PPM,0),0);
+        shape.setAsBox(15 / PPM, 20 / PPM,new Vector2(45/PPM,0),0);
         blockFDef.shape = shape;
         blockFDef.isSensor=true;
 
         body.createFixture(blockFDef).setUserData("BoxRight_"+globalBoxId);
 
-        shape.setAsBox(-10 / PPM, 20 / PPM,new Vector2(-45/PPM,0),0);
+        shape.setAsBox(-15 / PPM, 20 / PPM,new Vector2(-45/PPM,0),0);
         blockFDef.shape = shape;
         blockFDef.isSensor=true;
 
         body.createFixture(blockFDef).setUserData("BoxLeft_"+globalBoxId);
+        System.out.println(globalBoxId);
 
         id= globalBoxId;
         globalBoxId++;

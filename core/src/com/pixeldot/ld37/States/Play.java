@@ -18,7 +18,6 @@ import com.pixeldot.ld37.WorldObjects.Switch;
 import com.pixeldot.ld37.WorldObjects.Box;
 import com.pixeldot.ld37.WorldObjects.WorldObject;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import static com.pixeldot.ld37.Game.WIDTH;
@@ -53,6 +52,12 @@ public class Play extends State {
         ContentManager.loadTexture("PlayerRun", "Character/spritesheetSmol.png");
         ContentManager.loadTexture("PlayerWall", "Character/pushSpriteSheet.png");
         ContentManager.loadTexture("PlayerIdle", "Character/idleSpriteSheet.png");
+        ContentManager.loadTexture("Rice", "Materials/rice.png");
+        ContentManager.loadTexture("background", "Materials/Background.png");
+        ContentManager.loadTexture("LeftAutumn", "Side Panels/autumnLeftSlide.png");
+        ContentManager.loadTexture("RightAutumn", "Side Panels/autumnRightSlide.png");
+
+
         ContentManager.loadTexture("Brick", "Materials/brickTexture.png");
 
         block = new Block(world, new Vector2(700 / PPM, (HEIGHT - 50) / PPM), "Brick");
@@ -109,8 +114,29 @@ public class Play extends State {
 
         batch.setProjectionMatrix(camera.combined);
         renderer.setProjectionMatrix(camera.combined);
+        Animation back = new Animation("",ContentManager.getTexture("Rice"),1,1);
+        back.setFlipY(false);
+        back.setTargetWidth(1280);
+        back.setTargetHeight(720);
 
         batch.begin();
+        back.render(batch,new Vector2(640/PPM,360/PPM));
+        back = new Animation("",ContentManager.getTexture("background"),1,1);
+        back.setFlipY(false);
+        back.setTargetWidth(1280);
+        back.setTargetHeight(720);
+        back.render(batch, new Vector2(639/PPM,360/PPM));
+        back = new Animation("",ContentManager.getTexture("LeftAutumn"),1,1);
+        back.setFlipY(false);
+        back.setTargetWidth(252);
+        back.setTargetHeight(720);
+        back.render(batch,new Vector2(126/PPM,360/PPM));
+        back = new Animation("",ContentManager.getTexture("RightAutumn"),1,1);
+        back.setFlipY(false);
+        back.setTargetWidth(252);
+        back.setTargetHeight(720);
+        back.render(batch,new Vector2((1280-126)/PPM,360/PPM));
+
         player.render(batch);
         for(WorldObject wo: worldObjects)
             wo.render(batch);

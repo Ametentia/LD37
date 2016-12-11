@@ -71,7 +71,7 @@ public class Game extends ApplicationAdapter {
         accum += Gdx.graphics.getDeltaTime();
         while (accum >= DELTA) {
             accum -= DELTA;
-            Gdx.gl.glClearColor((100 / 255f), (149 / 255f), (237 / 255f), 1);
+            Gdx.gl.glClearColor(0, 0, 0, 1);
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
             gsm.update(DELTA);
