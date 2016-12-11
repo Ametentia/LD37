@@ -26,9 +26,11 @@ public class CollisionListener implements ContactListener {
 
         if(a.getUserData().equals("PlayerMain") && b.getUserData().equals("Wall")){
             playerPushing=true;
+            System.out.println("should squish");
         }
         else if(a.getUserData().equals("Wall") && b.getUserData().equals("PlayerMain")){
             playerPushing=true;
+            System.out.println("should squish");
         }
 
 

@@ -10,7 +10,7 @@ public class DesktopLauncher {
 
 		config.width = Game.WIDTH;
 		config.height = Game.HEIGHT;
-		config.fullscreen=true;
+		config.fullscreen=false;
 
 		config.forceExit = false;
 

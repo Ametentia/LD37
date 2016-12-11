@@ -37,8 +37,6 @@ public class Play extends State {
 
     private CollisionListener contactListener;
 
-    private Switch aSwitch;
-    private Block block;
     private ArrayList<WorldObject> worldObjects;
     private boolean jointMade;
     private Joint joint;
@@ -52,7 +50,7 @@ public class Play extends State {
         ContentManager.loadTexture("PlayerRun", "Character/spritesheetSmol.png");
         ContentManager.loadTexture("PlayerWall", "Character/pushSpriteSheet.png");
         ContentManager.loadTexture("PlayerIdle", "Character/idleSpriteSheet.png");
-        ContentManager.loadTexture("Rice", "Materials/rice.png");
+        ContentManager.loadTexture("Rice", "Materials/SpringSummerAutumnBackground.png");
         ContentManager.loadTexture("background", "Materials/Background.png");
         ContentManager.loadTexture("LeftAutumn", "Side Panels/autumnLeftSlide.png");
         ContentManager.loadTexture("RightAutumn", "Side Panels/autumnRightSlide.png");
@@ -60,8 +58,7 @@ public class Play extends State {
 
         ContentManager.loadTexture("Brick", "Materials/brickTexture.png");
 
-        block = new Block(world, new Vector2(700 / PPM, (HEIGHT - 50) / PPM), "Brick");
-        aSwitch = new Switch(world, new Vector2(400 / PPM, (HEIGHT - 50) / PPM), block);
+
 
         createRoom();
         createPlayer();
@@ -75,13 +72,6 @@ public class Play extends State {
 
             player.getBody().setTransform(mouse.x, mouse.y, 0);
         }
-
-        block.update(dt);
-
-        if(contactListener.isSwitch() && Gdx.input.isKeyJustPressed(Input.Keys.E)) {
-            aSwitch.flick();
-        }
-
         for(WorldObject wo: worldObjects) {
             wo.update(dt);
             if(wo instanceof Box){
@@ -140,13 +130,8 @@ public class Play extends State {
         player.render(batch);
         for(WorldObject wo: worldObjects)
             wo.render(batch);
-
-
-
-        block.render(batch);
-        font.draw(batch, "On Ground: " + player.isOnGound(), 100, 100);
         batch.end();
-        //debugRenderer.render(world, box2DCam.combined);
+        debugRenderer.render(world, box2DCam.combined);
     }
 
     public void dispose() {}
@@ -166,15 +151,21 @@ public class Play extends State {
         fdef.friction = 0.2f;
         room.createFixture(fdef).setUserData("Floor");
 
-        shape.setAsBox(20 / PPM, HEIGHT / PPM, new Vector2(((-WIDTH / 2) + 10) / PPM, 0), 0);
+        shape.setAsBox((252+24) / PPM, HEIGHT / PPM, new Vector2(((-WIDTH / 2) + 10) / PPM, 0), 0); // left wall
         room.createFixture(fdef).setUserData("Wall");
 
 
-        shape.setAsBox(20 / PPM, HEIGHT / PPM, new Vector2(((WIDTH / 2) - 10) / PPM, 0), 0);
+        shape.setAsBox((252+24) / PPM, HEIGHT / PPM, new Vector2(((WIDTH / 2) - 10) / PPM, 0), 0); // right wall
         room.createFixture(fdef).setUserData("Wall");
 
-        shape.setAsBox(WIDTH / PPM, 20 / PPM, new Vector2(0, ((-HEIGHT / 2) - 10) / PPM), 0);
+        shape.setAsBox(WIDTH / PPM, 40 / PPM, new Vector2(0, ((-HEIGHT / 2) - 10) / PPM), 0); //ceiling
         room.createFixture(fdef).setUserData("Wall");
+
+        Block block = new Block(world, new Vector2(700 / PPM, (HEIGHT - 50) / PPM), "Brick");
+        Switch aSwitch = new Switch(world, new Vector2(400 / PPM, (HEIGHT - 50) / PPM), block);
+
+        worldObjects.add(block);
+        worldObjects.add(aSwitch);
 
         shape.dispose();
     }
@@ -194,7 +185,7 @@ public class Play extends State {
         playerFDef.friction = 0.1f;
 
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(30 / PPM, 45 / PPM);
+        shape.setAsBox(30 / PPM, 42 / PPM);
         playerFDef.shape = shape;
         playerBody.createFixture(playerFDef).setUserData("PlayerMain");
 
@@ -232,7 +223,7 @@ public class Play extends State {
 
         boxBody = world.createBody(boxDef);
 
-        worldObjects.add(new Box(world,"Brick",new Vector2(150/PPM,50/PPM),contactListener));
+        //worldObjects.add(new Box(world,"Brick",new Vector2(150/PPM,50/PPM),contactListener));
         worldObjects.add(new Box(world,"Brick",new Vector2(500/PPM,50/PPM),contactListener));
     }
 }

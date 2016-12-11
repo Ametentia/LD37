@@ -53,7 +53,6 @@ public class Box implements WorldObject{
         blockFDef.isSensor=true;
 
         body.createFixture(blockFDef).setUserData("BoxLeft_"+globalBoxId);
-        System.out.println(globalBoxId);
 
         id= globalBoxId;
         globalBoxId++;
