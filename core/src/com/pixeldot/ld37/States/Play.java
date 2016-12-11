@@ -72,7 +72,17 @@ public class Play extends State {
         createPlayer();
     }
     public void loadSounds(){
-        ContentManager.loadSound("Jump1","Sounds/Jumps/finger_jump_1.wav");
+        ContentManager.loadSound("Jump1","Sounds/Jumps/finger_jump_1.mp3");
+        ContentManager.loadSound("Land1","Sounds/Jumps/card_land_1.mp3");
+        ContentManager.loadSound("Land2","Sounds/Jumps/card_land_2.mp3");
+        ContentManager.loadSound("Land3","Sounds/Jumps/card_land_3.mp3");
+        ContentManager.loadSound("Land4","Sounds/Jumps/box_land_1.mp3");
+        ContentManager.loadSound("Land5","Sounds/Jumps/box_land_2.mp3");
+        ContentManager.loadSound("Land6","Sounds/Jumps/box_land_3.mp3");
+        ContentManager.loadSound("Land7","Sounds/Jumps/finger_land_1.mp3");
+        ContentManager.loadSound("Land8","Sounds/Jumps/finger_land_2.mp3");
+        ContentManager.loadSound("Land9","Sounds/Jumps/finger_land_3.mp3");
+        ContentManager.loadSound("Land10","Sounds/Jumps/phone_land_1.mp3");
     }
 
     public void update(float dt) {
