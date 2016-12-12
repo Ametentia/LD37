@@ -24,6 +24,7 @@ public class Block extends WorldObject implements Triggerable {
     private Texture texture;
     private ArrayList<Vector2> states;
     private int currentState;
+    private float moveSpeed;
 
     private float width, height;
 
@@ -37,6 +38,7 @@ public class Block extends WorldObject implements Triggerable {
         texture = ContentManager.getTexture("Brick");
         states = new ArrayList<>();
         currentState = 0;
+        moveSpeed=100;
 
         texture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
         width = texture.getWidth();
@@ -47,7 +49,7 @@ public class Block extends WorldObject implements Triggerable {
         if(states.size() == 0) return;
 
         Vector2 dist = new Vector2(body.getPosition().x * PPM, body.getPosition().y * PPM).sub(states.get(currentState));
-        if(MathUtils.isZero(dist.len(), 0.4f)) {
+        if(MathUtils.isZero(dist.len(), 5f)) {
             body.setLinearVelocity(0, 0);
         }
     }
@@ -60,10 +62,10 @@ public class Block extends WorldObject implements Triggerable {
 
 
         if(states.get(currentState).y < body.getPosition().y * PPM) {
-            body.setLinearVelocity(0, -100 / PPM);
+            body.setLinearVelocity(0, -moveSpeed / PPM);
         }
         else if(states.get(currentState).y > body.getPosition().y * PPM) {
-            body.setLinearVelocity(0, 100 / PPM);
+            body.setLinearVelocity(0, moveSpeed / PPM);
         }
     }
     public void offTrigger() {
@@ -74,10 +76,10 @@ public class Block extends WorldObject implements Triggerable {
 
 
         if(states.get(currentState).y < body.getPosition().y * PPM) {
-            body.setLinearVelocity(0, -100 / PPM);
+            body.setLinearVelocity(0, -moveSpeed / PPM);
         }
         else if(states.get(currentState).y > body.getPosition().y * PPM){
-            body.setLinearVelocity(0, 100 / PPM);
+            body.setLinearVelocity(0, moveSpeed / PPM);
         }
     }
 
@@ -117,4 +119,8 @@ public class Block extends WorldObject implements Triggerable {
 
     public void setWidth(float width) { this.width = width; }
     public void setHeight(float height) { this.height = height; }
+
+    public void setMoveSpeed(float moveSpeed) {
+        this.moveSpeed = moveSpeed;
+    }
 }

@@ -10,6 +10,8 @@ import com.pixeldot.ld37.Entities.WorldObject;
 import com.pixeldot.ld37.Utilities.Animation;
 import com.pixeldot.ld37.Utilities.ContentManager;
 
+import java.util.ArrayList;
+
 import static com.pixeldot.ld37.Game.HEIGHT;
 import static com.pixeldot.ld37.Game.PPM;
 import static com.pixeldot.ld37.Game.WIDTH;
@@ -32,9 +34,15 @@ public class Room extends WorldObject {
     private float timeSince = 0;
     private boolean soundStart = false;
 
+    private ArrayList<Vector2> leaves;
+    private ArrayList<Integer> leaftype;
+    private ArrayList<Vector2> leafVar;
+
     public Room(Body body) {
         super(body);
-
+        leaves = new ArrayList<>();
+        leaftype = new ArrayList<>();
+        leafVar = new ArrayList<>();
         background = ContentManager.getTexture("Background");
         backgroundRice = ContentManager.getTexture("Rice");
         backgroundLeft = ContentManager.getTexture("LeftAutumn");
@@ -48,18 +56,33 @@ public class Room extends WorldObject {
     }
 
     public void update(float dt) {
+        timeSince+=dt;
         if(endRun){
             if(!soundStart) {
                 ContentManager.getRandomSound("Walk",1,3).play();
                 soundStart=true;
             }
-            timeSince+=dt;
             endRunPos.set(endRunPos.x-120*dt/PPM,endRunPos.y+1.5f*(float)Math.sin(timeSince* 20f)/PPM);
             if(endRunPos.x<350/PPM) {
                 endRun = false;
                 runDone = true;
                 ContentManager.stopRandomNoise("Walk",1,3);
             }
+        }
+        //378 - 776
+        if(timeSince%2 >1 && timeSince%2 <1.05) {
+            leaves.add(new Vector2(300 + (float) Math.random() * ((900 - 300) + 1), 300));
+            int newleaf = 1+(int)(Math.random()*((15-1)+1));
+            leaftype.add(newleaf);
+            leafVar.add(new Vector2(1 + (float) Math.random() * ((180 - 1) + 1),2 + (float) Math.random() * ((10 - 2) + 1)));
+        }
+
+        if(timeSince>10000000)
+            timeSince=0;
+        for(int i= 0; i < leaves.size();i++){
+            Vector2 temp = leaves.get(i);
+            temp.add((float)leafVar.get(i).y/10*(float)Math.sin(timeSince+leafVar.get(i).x),(10+leafVar.get(i).y)*dt);
+            leaves.set(i,temp);
         }
     }
 
@@ -70,6 +93,8 @@ public class Room extends WorldObject {
         if(endRun){
             aisu.render(batch,endRunPos);
         }
+        for(int i = 0; i < leaftype.size(); i++)
+            batch.draw(ContentManager.getTexture("Leave"+leaftype.get(i)), leaves.get(i).x,leaves.get(i).y);
 
         batch.draw(background, 0, 0, WIDTH, HEIGHT,
                 0, 0, background.getWidth(), background.getHeight(), false, true);

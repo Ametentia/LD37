@@ -55,6 +55,22 @@ public class Level extends State {
 
         ContentManager.loadTexture("FloorButton", "Materials/button.png");
 
+        ContentManager.loadTexture("Leave1","leaves/001.png");
+        ContentManager.loadTexture("Leave2","leaves/002.png");
+        ContentManager.loadTexture("Leave3","leaves/003.png");
+        ContentManager.loadTexture("Leave4","leaves/004.png");
+        ContentManager.loadTexture("Leave5","leaves/005.png");
+        ContentManager.loadTexture("Leave6","leaves/006.png");
+        ContentManager.loadTexture("Leave7","leaves/007.png");
+        ContentManager.loadTexture("Leave8","leaves/008.png");
+        ContentManager.loadTexture("Leave9","leaves/009.png");
+        ContentManager.loadTexture("Leave10","leaves/010.png");
+        ContentManager.loadTexture("Leave11","leaves/011.png");
+        ContentManager.loadTexture("Leave12","leaves/012.png");
+        ContentManager.loadTexture("Leave13","leaves/013.png");
+        ContentManager.loadTexture("Leave14","leaves/014.png");
+        ContentManager.loadTexture("Leave15","leaves/015.png");
+
         Room room = new Room(BodyFactory.getRoomBody(world));
         room.setName("MainRoom");
         worldObjects.add(room);
@@ -85,6 +101,9 @@ public class Level extends State {
                 break;
             case 5:
                 setupLevel5();
+                break;
+            case 6:
+                setupLevel6();
                 break;
         }
         PolygonShape shape = new PolygonShape();
@@ -316,8 +335,8 @@ public class Level extends State {
         worldObjects.add(block3);
         collisionListener.registerWorldObject(block3);
 
-        Block exitStop = new Block(BodyFactory.getBlockBody(world, new Vector2(840, HEIGHT-180), new Vector2(60, 300), BodyDef.BodyType.KinematicBody));
-        exitStop.setHeight(300);
+        Block exitStop = new Block(BodyFactory.getBlockBody(world, new Vector2(840, HEIGHT-210), new Vector2(60, 300), BodyDef.BodyType.KinematicBody));
+        exitStop.setHeight(350);
         exitStop.setWidth(60);
         exitStop.setName("ExitBlock");
 
@@ -345,11 +364,11 @@ public class Level extends State {
 
         worldObjects.add(fbut);
 
-        Box box = new Box(BodyFactory.getBoxBody(world,new Vector2(WIDTH/2-WIDTH/4+100,HEIGHT-350),new Vector2(90,90)));
+        Box box = new Box(BodyFactory.getBoxBody(world,new Vector2(WIDTH/2-WIDTH/4+100,HEIGHT-350),new Vector2(80,80)));
         box.setTexture("Star");
         box.setName("Box");
-        box.setHeight(90);
-        box.setWidth(90);
+        box.setHeight(80);
+        box.setWidth(80);
 
         worldObjects.add(box);
 
@@ -357,6 +376,33 @@ public class Level extends State {
         collisionListener.registerWorldObject(fbut);
         collisionListener.registerWorldObject(button);
         collisionListener.registerWorldObject(block);
+    }
+    public void setupLevel6(){
+        Block block = new Block(BodyFactory.getBlockBody(world, new Vector2(WIDTH / 2+20, HEIGHT), new Vector2(120, HEIGHT), BodyDef.BodyType.KinematicBody));
+        block.setHeight(HEIGHT);
+        block.setWidth(120);
+        block.setName("Barrier");
+        worldObjects.add(block);
+        collisionListener.registerWorldObject(block);
+
+        Block trampoline = new Block(BodyFactory.getBlockBody(world, new Vector2(WIDTH/2-130, HEIGHT-10), new Vector2(50, 80), BodyDef.BodyType.KinematicBody));
+        trampoline.setHeight(80);
+        trampoline.setMoveSpeed(1100);
+        trampoline.setWidth(50);
+        trampoline.setName("trampoline");
+
+        trampoline.addState(new Vector2(WIDTH/2-130, HEIGHT-10));
+        trampoline.addState(new Vector2(WIDTH/2-130, HEIGHT-80));
+
+        worldObjects.add(trampoline);
+        collisionListener.registerWorldObject(trampoline);
+
+        Switch swch = new Switch(BodyFactory.getBody(world, new Vector2(WIDTH/2-80, HEIGHT - 100),new Vector2(120,60),BodyDef.BodyType.StaticBody),trampoline);
+        swch.setName("Switch");
+        swch.getBody().getFixtureList().get(0).setSensor(true);
+
+        worldObjects.add(swch);
+        collisionListener.registerWorldObject(swch);
     }
 
 }

@@ -16,8 +16,9 @@ public class GameStateManager {
     public static final int LEVEL3 = 5;
     public static final int LEVEL4 = 6;
     public static final int LEVEL5 = 8;
+    public static final int LEVEL6 = 9;
 
-    public static final int[] LEVELS= {LEVEL1,LEVEL2,LEVEL3,LEVEL4,LEVEL5};
+    public static final int[] LEVELS= {LEVEL1,LEVEL2,LEVEL3,LEVEL4,LEVEL5,LEVEL6};
 
     public final Game game;
     private Stack<State> states;
@@ -41,6 +42,8 @@ public class GameStateManager {
                 return new Level(this, 4);
             case LEVEL5:
                 return new Level(this, 5);
+            case LEVEL6:
+                return new Level(this, 6);
             case MENU:
                 return new MainMenu(this);
             case CREDITS:
