@@ -14,6 +14,8 @@ public class GameStateManager {
     public static final int LEVEL2 = 4;
     public static final int LEVEL3 = 5;
 
+    public static final int[] LEVELS= {LEVEL1,LEVEL2,LEVEL3};
+
     public final Game game;
     private Stack<State> states;
 
@@ -27,11 +29,12 @@ public class GameStateManager {
             case PLAY:
                 return new Play(this);
             case LEVEL1:
-                return new Level1(this);
+                return new Level(this, 1);
             case LEVEL2:
-                return new Level2(this);
+                return new Level(this, 2);
             case LEVEL3:
-                return new Level3(this);
+                return new Level(this, 3);
+
             default:
                 throw new IllegalArgumentException("Error: Unknown State");
         }

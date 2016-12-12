@@ -60,7 +60,7 @@ public class Game extends ApplicationAdapter {
         renderer = new ShapeRenderer();
 
         gsm = new GameStateManager(this);
-        gsm.pushState(GameStateManager.LEVEL3);
+        gsm.pushState(GameStateManager.LEVEL1);
 
         accum = 0;
 	}

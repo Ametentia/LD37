@@ -10,18 +10,22 @@ import com.pixeldot.ld37.Utilities.*;
 
 import java.util.ArrayList;
 
-import static com.pixeldot.ld37.Game.*;
+import static com.pixeldot.ld37.Game.HEIGHT;
+import static com.pixeldot.ld37.Game.PPM;
+import static com.pixeldot.ld37.Game.WIDTH;
 
-public class Level2 extends State {
+public class Level extends State {
 
     private ArrayList<WorldObject> worldObjects;
     private Player player;
     private CollisionListener collisionListener;
     private Door exit;
     private Door entrance;
+    private int level;
 
-    public Level2(GameStateManager gsm) {
+    public Level(GameStateManager gsm, int level) {
         super(gsm);
+        this.level = level;
         world = new World(new Vector2(0, 9.81f), true);
         worldObjects = new ArrayList<>();
         world.setContactListener(collisionListener = new CollisionListener());
@@ -37,6 +41,7 @@ public class Level2 extends State {
 
         ContentManager.loadTexture("Diamond", "Materials/diamondTexture.png");
         ContentManager.loadTexture("Brick", "Materials/brickTexture.png");
+        ContentManager.loadTexture("Star", "Materials/starDesign.png");
 
         ContentManager.loadTexture("DoorClosed", "Materials/door.png");
         ContentManager.loadTexture("DoorOpen", "Character/doorSpritesheet.png");
@@ -59,23 +64,17 @@ public class Level2 extends State {
         exit.setName("ExitDoor");
         worldObjects.add(exit);
 
-
-        Block block = new Block(BodyFactory.getBlockBody(world, new Vector2(WIDTH/ 2 + WIDTH/8, HEIGHT -140), new Vector2(100, 225), BodyDef.BodyType.KinematicBody));
-        block.setName("Pillar");
-        block.setWidth(100);
-        block.setHeight(225);
-
-        worldObjects.add(block);
-
-        Box box = new Box(BodyFactory.getBoxBody(world,new Vector2(WIDTH/2-WIDTH/8,HEIGHT-131),new Vector2(90,90)));
-        box.setTexture("Diamond");
-        box.setName("Box");
-        box.setHeight(90);
-        box.setWidth(90);
-
-        worldObjects.add(box);
-
-
+        switch (level) {
+            case 1:
+                setupLevel1();
+                break;
+            case 2:
+                setupLevel2();
+                break;
+            case 3:
+                setupLevel3();
+                break;
+        }
         PolygonShape shape = new PolygonShape();
         FixtureDef fixtureDef = new FixtureDef();
 
@@ -104,13 +103,11 @@ public class Level2 extends State {
 
         worldObjects.add(player);
 
-
         collisionListener.registerWorldObject(entrance);
         collisionListener.registerWorldObject(player);
         collisionListener.registerWorldObject(room);
-        collisionListener.registerWorldObject(block);
+
         collisionListener.registerWorldObject(exit);
-        collisionListener.registerWorldObject(box);
         player.setAlive(false);
         entrance.onTrigger();
         this.entrance = entrance;
@@ -161,9 +158,88 @@ public class Level2 extends State {
             else if(null != r && doorFinished && r.isRunDone())
             {
                 gsm.popState();
-                gsm.pushState(GameStateManager.LEVEL3);
+                gsm.pushState(GameStateManager.LEVELS[level]);
             }
         }
     }
     public void dispose() {}
+
+    public void setupLevel1(){
+        Block block = new Block(BodyFactory.getBlockBody(world, new Vector2(WIDTH / 2, HEIGHT / 2), new Vector2(100, HEIGHT), BodyDef.BodyType.KinematicBody));
+        block.setName("Pillar");
+        block.setWidth(100);
+        block.setHeight(HEIGHT);
+        block.addState(new Vector2(WIDTH / 2, HEIGHT / 2));
+        block.addState(new Vector2(WIDTH / 2, HEIGHT + (HEIGHT / 2)));
+
+        worldObjects.add(block);
+
+        Switch swtch = new Switch(BodyFactory.getBody(world, new Vector2(500, HEIGHT - 100), new Vector2(60, 90), BodyDef.BodyType.StaticBody), block);
+        swtch.setName("Switch");
+        swtch.getBody().getFixtureList().get(0).setSensor(true);
+
+        worldObjects.add(swtch);
+        collisionListener.registerWorldObject(block);
+        collisionListener.registerWorldObject(swtch);
+    }
+
+    public void setupLevel2(){
+        Block block = new Block(BodyFactory.getBlockBody(world, new Vector2(WIDTH/ 2 + WIDTH/8, HEIGHT -140), new Vector2(100, 225), BodyDef.BodyType.KinematicBody));
+        block.setName("Pillar");
+        block.setWidth(100);
+        block.setHeight(225);
+
+        worldObjects.add(block);
+
+        Box box = new Box(BodyFactory.getBoxBody(world,new Vector2(WIDTH/2-WIDTH/8,HEIGHT-131),new Vector2(90,90)));
+        box.setTexture("Diamond");
+        box.setName("Box");
+        box.setHeight(90);
+        box.setWidth(90);
+
+        worldObjects.add(box);
+
+        collisionListener.registerWorldObject(box);
+        collisionListener.registerWorldObject(block);
+    }
+
+    public void setupLevel3(){
+        Block block = new Block(BodyFactory.getBlockBody(world, new Vector2(WIDTH/ 2 + WIDTH/8-10, HEIGHT -130), new Vector2(100, 200), BodyDef.BodyType.KinematicBody));
+        block.setTexture("Brick");
+        block.setName("Pillar");
+        block.setWidth(100);
+        block.setHeight(200);
+
+        worldObjects.add(block);
+
+        Block block2 = new Block(BodyFactory.getBlockBody(world, new Vector2(WIDTH/ 2, HEIGHT-280), new Vector2(400, 110), BodyDef.BodyType.KinematicBody));
+        block2.setName("Stage");
+        block2.setTexture("Brick");
+        block2.setWidth(400);
+        block2.setHeight(110);
+
+        worldObjects.add(block2);
+
+        Block block3 = new Block(BodyFactory.getBlockBody(world, new Vector2(WIDTH/ 2-330, HEIGHT-200), new Vector2(50, 50), BodyDef.BodyType.KinematicBody));
+        block3.setName("help box");
+        block3.setTexture("Brick");
+        block3.setWidth(50);
+        block3.setHeight(50);
+
+        worldObjects.add(block3);
+
+        Box box = new Box(BodyFactory.getBoxBody(world,new Vector2(WIDTH/2+WIDTH/12,HEIGHT-131),new Vector2(90,90)));
+        box.setTexture("Star");
+        box.setName("Box");
+        box.setHeight(90);
+        box.setWidth(90);
+
+        worldObjects.add(box);
+
+        collisionListener.registerWorldObject(block);
+        collisionListener.registerWorldObject(block2);
+        collisionListener.registerWorldObject(block3);
+        collisionListener.registerWorldObject(box);
+    }
+
 }
