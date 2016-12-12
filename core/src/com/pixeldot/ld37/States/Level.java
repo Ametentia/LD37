@@ -68,6 +68,7 @@ public class Level extends State {
         exit.setName("ExitDoor");
         worldObjects.add(exit);
 
+        System.out.println(level);
         switch (level) {
             case 1:
                 setupLevel1();
@@ -166,8 +167,12 @@ public class Level extends State {
             }
             else if(null != r && doorFinished && r.isRunDone())
             {
-                gsm.popState();
-                gsm.pushState(GameStateManager.LEVELS[level]);
+                if(level == GameStateManager.LEVELS.length) {
+                    System.out.println("FINISHED!");
+                }
+                else {
+                    gsm.setState(GameStateManager.LEVELS[level]);
+                }
             }
         }
     }

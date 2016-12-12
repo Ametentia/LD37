@@ -62,7 +62,7 @@ public class Game extends ApplicationAdapter {
         loadSounds();
 
         gsm = new GameStateManager(this);
-        gsm.pushState(GameStateManager.LEVEL4);
+        gsm.pushState(GameStateManager.LEVEL1);
 
         accum = 0;
 	}

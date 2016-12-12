@@ -204,6 +204,15 @@ public class Player extends WorldObject {
             }
         }
 
+        if(a.getUserData() != null && (a.getUserData().equals("BoxLeft") || a.getUserData().equals("BoxRight"))) {
+            jointDef = null;
+            createJoint = false;
+        }
+        else if(b.getUserData() != null && (b.getUserData().equals("BoxLeft") || b.getUserData().equals("BoxRight"))) {
+            jointDef = null;
+            createJoint = false;
+        }
+
         if(currentSwitch != null && currentSwitch.equals(worldObject)) {
             canSwitch = false;
             currentSwitch = null;

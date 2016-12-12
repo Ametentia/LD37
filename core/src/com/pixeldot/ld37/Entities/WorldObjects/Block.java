@@ -84,8 +84,10 @@ public class Block extends WorldObject implements Triggerable {
     }
 
     public void render(SpriteBatch batch) {
+        int u = width < height ? 100 : 1162;
+        int v = height < width ? 100 : 1077;
         batch.draw(texture, body.getPosition().x * PPM - (width / 2), body.getPosition().y * PPM - (height / 2),
-                width, height, 0, 0, 1500, 5000, false, true);
+                width, height, 0, 0, u, v, false, true);
     }
 
     public void onCollisionBegin(WorldObject worldObject, Contact contact) {}
