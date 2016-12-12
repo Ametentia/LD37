@@ -17,8 +17,8 @@ public class Door extends WorldObject implements Triggerable {
     public Door(Body body, boolean isExit) {
         super(body);
         animation = new Animation("Closed", ContentManager.getTexture("DoorClosed"), 1, 1);
-        animation.setTargetWidth(100);
-        animation.setTargetHeight(85);
+        animation.setTargetWidth(125);
+        animation.setTargetHeight(106);
 
         this.isExit = isExit;
         isOpen = false;
@@ -30,16 +30,16 @@ public class Door extends WorldObject implements Triggerable {
 
     public void onTrigger() {
         animation = new Animation("Open", ContentManager.getTexture("DoorOpen"), 4, 4);
-        animation.setTargetWidth(100);
-        animation.setTargetHeight(85);
+        animation.setTargetWidth(125);
+        animation.setTargetHeight(106);
         animation.setMaxPlays(1);
         isOpen = true;
     }
 
     public void offTrigger() {
         animation = new Animation("Close", ContentManager.getTexture("DoorClose"), 4, 4);
-        animation.setTargetWidth(100);
-        animation.setTargetHeight(85);
+        animation.setTargetWidth(125);
+        animation.setTargetHeight(106);
         animation.setMaxPlays(1);
         isOpen = false;
     }

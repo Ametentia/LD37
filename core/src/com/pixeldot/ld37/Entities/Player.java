@@ -63,28 +63,21 @@ public class Player extends WorldObject {
         }
 
         if(Gdx.input.isKeyPressed(Input.Keys.A)) {
-            float fX = isPulling && Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT) ? -1400 : -400;
-            body.applyForceToCenter(-400  / PPM, 0, true);
-            /*if(collisions.isPlayerPushing())
-                currentAnimation="SquishFace";
-            else {
-                currentAnimation = "Run";
-                animations.get(currentAnimation).setStartFrame(1);
-            }*/
+            body.applyForceToCenter(-700  / PPM, 0, true);
+
+            currentAnimation = "Run";
+            animations.get(currentAnimation).setStartFrame(1);
+
             animations.get(currentAnimation).setFlipX(true);
             animations.get("Idle").setFlipX(true);
             animations.get(currentAnimation).setStartFrame(1);
 
         }
         else if(Gdx.input.isKeyPressed(Input.Keys.D)) {
-            float fX = isPulling && !Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT) ? 1400 : 400;
-            body.applyForceToCenter(fX  / PPM, 0, true);
-            /*if(collisions.isPlayerPushing())
-                currentAnimation="SquishFace";
-            else {
-                currentAnimation = "Run";
-                animations.get(currentAnimation).setStartFrame(1);
-            }*/
+            body.applyForceToCenter(700  / PPM, 0, true);
+            currentAnimation = "Run";
+            animations.get(currentAnimation).setStartFrame(1);
+
             animations.get(currentAnimation).setFlipX(false);
             animations.get("Idle").setFlipX(false);
         }
@@ -133,17 +126,8 @@ public class Player extends WorldObject {
         }
 
 
-        if(a.getUserData() != null && (a.getUserData().equals("BoxRight") || a.getUserData().equals("BoxLeft"))) {
-            System.out.println("Should Pull!");
-            jointDef = new DistanceJointDef();
-            createJoint = true;
-            jointDef.length = 83 / PPM;
-            jointDef.collideConnected = true;
-            jointDef.bodyB = worldObject.getBody();
-            jointDef.bodyA = body;
-        }
-        else if(b.getUserData() != null && (b.getUserData().equals("BoxRight") || b.getUserData().equals("BoxLeft"))) {
-            System.out.println("Should Pull!");
+        if(( a.getUserData() != null || b.getUserData() != null )&& (a.getUserData().equals("BoxRight") || a.getUserData().equals("BoxLeft")) ||
+                (b.getUserData().equals("BoxRight") || b.getUserData().equals("BoxLeft"))) {
             jointDef = new DistanceJointDef();
             createJoint = true;
             jointDef.length = 83 / PPM;

@@ -49,12 +49,18 @@ public class Testing extends State {
         room.setName("MainRoom");
         worldObjects.add(room);
 
-        Door entrance = new Door(BodyFactory.getBody(world, new Vector2(337, HEIGHT - 75), new Vector2(100, 85), BodyDef.BodyType.StaticBody), false);
+        Door entrance = new Door(BodyFactory.getBody(world, new Vector2(350, HEIGHT - 86), new Vector2(125, 106), BodyDef.BodyType.StaticBody), false);
         entrance.getBody().getFixtureList().get(0).setSensor(true);
-
+        entrance.setName("EntranceDoor");
         worldObjects.add(entrance);
 
-        Switch swtch = new Switch(BodyFactory.getBody(world, new Vector2(WIDTH - 400, HEIGHT - 100), new Vector2(60, 90), BodyDef.BodyType.StaticBody), entrance);
+        Door exit = new Door(BodyFactory.getBody(world, new Vector2(500, HEIGHT - 86), new Vector2(125, 106), BodyDef.BodyType.StaticBody), true);
+        exit.getBody().getFixtureList().get(0).setSensor(true);
+        exit.setName("ExitDoor");
+        worldObjects.add(exit);
+
+
+        Switch swtch = new Switch(BodyFactory.getBody(world, new Vector2(WIDTH - 400, HEIGHT - 100), new Vector2(60, 90), BodyDef.BodyType.StaticBody), exit);
         swtch.setName("Switch");
         swtch.getBody().getFixtureList().get(0).setSensor(true);
 
@@ -77,6 +83,15 @@ public class Testing extends State {
         idle.setTargetWidth(60);
         player = new Player(BodyFactory.getBody(world, new Vector2(400, 400), new Vector2(60, 90), BodyDef.BodyType.DynamicBody), world, idle);
         player.setName("Player");
+        Animation a = new Animation("Run", ContentManager.getTexture("PlayerRun"), 2, 4);
+        a.setTargetWidth(60);
+        a.setTargetHeight(90);
+        player.addAnimation(a);
+        a = new Animation("SquishFace",ContentManager.getTexture("PlayerWall"), 2,4);
+        a.setEndFrame(6);
+        a.setTargetWidth(60);
+        a.setTargetHeight(90);
+        player.addAnimation(a);
 
         Body pBody = player.getBody();
         fixtureDef.isSensor = true;
@@ -88,6 +103,7 @@ public class Testing extends State {
 
         collisionListener.registerWorldObject(swtch);
         collisionListener.registerWorldObject(entrance);
+        collisionListener.registerWorldObject(exit);
         collisionListener.registerWorldObject(box);
         collisionListener.registerWorldObject(player);
         collisionListener.registerWorldObject(room);
@@ -113,7 +129,7 @@ public class Testing extends State {
         batch.end();
 
         // Debug Render Bodies
-        debugRenderer.render(world, box2DCam.combined);
+        //debugRenderer.render(world, box2DCam.combined);
     }
 
     public void dispose() {}
