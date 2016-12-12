@@ -36,7 +36,6 @@ public class Level extends State {
 
         ContentManager.loadTexture("PlayerRun", "Character/spritesheetSmol.png");
         ContentManager.loadTexture("PlayerWall", "Character/pushSpriteSheet.png");
-        ContentManager.loadTexture("PlayerIdle", "Character/idleSpriteSheet.png");
         ContentManager.loadTexture("Shadow", "Character/shadow.png");
         ContentManager.loadTexture("Rice", "Materials/SpringSummerAutumnBackground.png");
         ContentManager.loadTexture("Background", "Materials/Background.png");
@@ -53,6 +52,8 @@ public class Level extends State {
 
         ContentManager.loadTexture("SwitchOff", "World Objects/leverOFF.png");
         ContentManager.loadTexture("SwitchOn", "World Objects/leverON.png");
+
+        ContentManager.loadTexture("FloorButton", "Materials/button.png");
 
         Room room = new Room(BodyFactory.getRoomBody(world));
         room.setName("MainRoom");
@@ -148,7 +149,7 @@ public class Level extends State {
 
 
         // Debug Render Bodies
-        //debugRenderer.render(world, box2DCam.combined);
+        debugRenderer.render(world, box2DCam.combined);
     }
     public void endSequence(){
         if(!player.isAlive() && player.isCanExit()) {
@@ -168,7 +169,7 @@ public class Level extends State {
             else if(null != r && doorFinished && r.isRunDone())
             {
                 if(level == GameStateManager.LEVELS.length) {
-                    System.out.println("FINISHED!");
+                    gsm.popState();
                 }
                 else {
                     gsm.setState(GameStateManager.LEVELS[level]);
@@ -256,7 +257,23 @@ public class Level extends State {
         collisionListener.registerWorldObject(box);
     }
     public void setupLevel4(){
+        Block block = new Block(BodyFactory.getBlockBody(world, new Vector2(WIDTH / 2, HEIGHT - (HEIGHT / 4)), new Vector2(60, HEIGHT / 4), BodyDef.BodyType.KinematicBody));
+        block.setHeight(HEIGHT / 4);
+        block.setWidth(60);
+        block.setName("Block");
 
+        block.addState(new Vector2(WIDTH / 2, HEIGHT - 30));
+        block.addState(new Vector2(WIDTH / 2, HEIGHT - (HEIGHT / 4)));
+
+        FloorButton button = new FloorButton(BodyFactory.getBody(world, new Vector2(540, HEIGHT - 40), new Vector2(100, 15), BodyDef.BodyType.StaticBody), block);
+        button.getBody().getFixtureList().get(0).setSensor(true);
+        button.setName("Button");
+
+        worldObjects.add(button);
+        worldObjects.add(block);
+
+        collisionListener.registerWorldObject(button);
+        collisionListener.registerWorldObject(block);
     }
 
 }

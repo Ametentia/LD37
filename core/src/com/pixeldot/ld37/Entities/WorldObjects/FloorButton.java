@@ -7,6 +7,7 @@ import com.badlogic.gdx.physics.box2d.Contact;
 import com.pixeldot.ld37.Entities.Interfaces.Triggerable;
 import com.pixeldot.ld37.Entities.Player;
 import com.pixeldot.ld37.Entities.WorldObject;
+import com.pixeldot.ld37.Utilities.ContentManager;
 
 import static com.pixeldot.ld37.Game.PPM;
 
@@ -21,13 +22,15 @@ public class FloorButton extends WorldObject {
         super(body);
         this.target = target;
         state = false;
+
+        texture = ContentManager.getTexture("FloorButton");
     }
 
     public void update(float dt) {}
 
     public void render(SpriteBatch batch) {
-        batch.draw(texture, body.getPosition().x * PPM - 15, body.getPosition().y * PPM - 15,
-                30, 30, 0, 0, texture.getWidth(), texture.getHeight(), false, true);
+        batch.draw(texture, body.getPosition().x * PPM - 50, body.getPosition().y * PPM - 7.5f,
+                100, 15, 0, 0, texture.getWidth(), texture.getHeight(), false, true);
     }
 
     public void onCollisionBegin(WorldObject worldObject, Contact contact) {

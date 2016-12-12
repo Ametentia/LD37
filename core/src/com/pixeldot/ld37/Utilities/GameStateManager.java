@@ -8,6 +8,7 @@ import java.util.Stack;
 public class GameStateManager {
 
     public static final int MENU = 0;
+    public static final int CREDITS = 7;
     public static final int PLAY = 1;
     public static final int PAUSE = 2;
     public static final int LEVEL1 = 3;
@@ -37,6 +38,10 @@ public class GameStateManager {
                 return new Level(this, 3);
             case LEVEL4:
                 return new Level(this, 4);
+            case MENU:
+                return new MainMenu(this);
+            case CREDITS:
+                return new CreditScreen(this);
 
             default:
                 throw new IllegalArgumentException("Error: Unknown State");

@@ -61,8 +61,11 @@ public class Game extends ApplicationAdapter {
         renderer = new ShapeRenderer();
         loadSounds();
 
+        ContentManager.loadTexture("Credits", "Materials/credits.png");
+        ContentManager.loadTexture("PlayerIdle", "Character/idleSpriteSheet.png");
+
         gsm = new GameStateManager(this);
-        gsm.pushState(GameStateManager.LEVEL1);
+        gsm.pushState(GameStateManager.MENU);
 
         accum = 0;
 	}
@@ -79,7 +82,7 @@ public class Game extends ApplicationAdapter {
             gsm.update(DELTA);
             gsm.render();
 
-            if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) Gdx.app.exit();
+           // if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) Gdx.app.exit();
         }
 	}
 
