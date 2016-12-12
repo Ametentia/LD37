@@ -35,7 +35,7 @@ public class Player extends WorldObject {
     private int standingon=0;
 
     private Switch currentSwitch;
-    private boolean canSwitch = false;
+    private int canSwitch = 0;
     private boolean canExit = false;
     private Door exitDoor;
 
@@ -124,7 +124,7 @@ public class Player extends WorldObject {
         }
 
 
-        if(canSwitch && currentSwitch != null && Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+        if(canSwitch > 0 && currentSwitch != null && Gdx.input.isKeyJustPressed(Input.Keys.E)) {
             currentSwitch.flick();
         }
         else if(exitDoor != null &&Gdx.input.isKeyJustPressed(Input.Keys.E) && canExit && alive){
@@ -182,8 +182,9 @@ public class Player extends WorldObject {
         }
         if(worldObject instanceof Switch) {
             currentSwitch = (Switch) worldObject;
-            canSwitch = true;
+            canSwitch++;
         }
+
         if(worldObject instanceof Door && ((Door) worldObject).isExit()){
             canExit=true;
             exitDoor=(Door)worldObject;
@@ -217,8 +218,11 @@ public class Player extends WorldObject {
         }
 
         if(currentSwitch != null && currentSwitch.equals(worldObject)) {
-            canSwitch = false;
-            currentSwitch = null;
+            canSwitch--;
+            if(canSwitch <= 0) {
+                currentSwitch = null;
+                canSwitch = 0;
+            }
         }
         if(worldObject instanceof Door && ((Door) worldObject).isExit()){
             canExit=false;
