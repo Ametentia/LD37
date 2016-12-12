@@ -32,6 +32,7 @@ public class Player extends WorldObject {
     private boolean createJoint;
 
     private boolean walking;
+    private int standingon=0;
 
     private Switch currentSwitch;
     private boolean canSwitch = false;
@@ -154,7 +155,8 @@ public class Player extends WorldObject {
         // Check for ground collision beginning
         if(a.getUserData() != null && a.getUserData().equals("Bottom")) {
             if(b.getUserData() != null && b.getUserData().equals("Foot")) {
-                onGround = true;
+                standingon++;
+                onGround = standingon>0;
             }
         }
 
@@ -195,12 +197,14 @@ public class Player extends WorldObject {
         // Check for ground collision ending
         if(a.getUserData() != null && a.getUserData().equals("Bottom")) {
             if(b.getUserData() != null && b.getUserData().equals("Foot")) {
-                onGround = false;
+                standingon--;
+                onGround = standingon>0;
             }
         }
         else if(a.getUserData() != null && a.getUserData().equals("Foot")) {
             if(b.getUserData() != null && b.getUserData().equals("Bottom")) {
-                onGround = false;
+                standingon--;
+                onGround = standingon>0;
             }
         }
 

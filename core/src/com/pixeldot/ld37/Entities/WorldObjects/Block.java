@@ -47,7 +47,7 @@ public class Block extends WorldObject implements Triggerable {
         if(states.size() == 0) return;
 
         Vector2 dist = new Vector2(body.getPosition().x * PPM, body.getPosition().y * PPM).sub(states.get(currentState));
-        if(MathUtils.isZero(dist.len(), 0.1f)) {
+        if(MathUtils.isZero(dist.len(), 0.4f)) {
             body.setLinearVelocity(0, 0);
         }
     }
@@ -56,29 +56,27 @@ public class Block extends WorldObject implements Triggerable {
         if(states.size() == 0) return;
 
         currentState++;
-        if(currentState == states.size()) {
-            currentState = 0;
-        }
+        System.out.println("state is now "+currentState);
+
 
         if(states.get(currentState).y < body.getPosition().y * PPM) {
             body.setLinearVelocity(0, -100 / PPM);
         }
-        else {
+        else if(states.get(currentState).y > body.getPosition().y * PPM) {
             body.setLinearVelocity(0, 100 / PPM);
         }
     }
     public void offTrigger() {
         if(states.size() == 0) return;
 
-        currentState++;
-        if(currentState == states.size()) {
-            currentState = 0;
-        }
+        currentState--;
+        System.out.println("state is now "+currentState);
+
 
         if(states.get(currentState).y < body.getPosition().y * PPM) {
             body.setLinearVelocity(0, -100 / PPM);
         }
-        else {
+        else if(states.get(currentState).y > body.getPosition().y * PPM){
             body.setLinearVelocity(0, 100 / PPM);
         }
     }

@@ -83,6 +83,9 @@ public class Level extends State {
             case 4:
                 setupLevel4();
                 break;
+            case 5:
+                setupLevel5();
+                break;
         }
         PolygonShape shape = new PolygonShape();
         FixtureDef fixtureDef = new FixtureDef();
@@ -149,7 +152,7 @@ public class Level extends State {
 
 
         // Debug Render Bodies
-        debugRenderer.render(world, box2DCam.combined);
+        //debugRenderer.render(world, box2DCam.combined);
     }
     public void endSequence(){
         if(!player.isAlive() && player.isCanExit()) {
@@ -282,6 +285,76 @@ public class Level extends State {
         worldObjects.add(box);
 
         collisionListener.registerWorldObject(box);
+        collisionListener.registerWorldObject(button);
+        collisionListener.registerWorldObject(block);
+    }
+    public void setupLevel5(){
+        Block block = new Block(BodyFactory.getBlockBody(world, new Vector2(WIDTH / 2+20, HEIGHT+HEIGHT*2/5+70), new Vector2(120, HEIGHT), BodyDef.BodyType.KinematicBody));
+        block.setHeight(HEIGHT);
+        block.setWidth(120);
+        block.setName("Block");
+
+
+        block.addState(new Vector2(WIDTH / 2+20, HEIGHT+HEIGHT*2/5+70));
+        block.addState(new Vector2(WIDTH / 2+20, HEIGHT+HEIGHT*2/5-200));
+        block.addState(new Vector2(WIDTH / 2+20, HEIGHT+HEIGHT*2/5-440));
+        worldObjects.add(block);
+
+        Block block2 = new Block(BodyFactory.getBlockBody(world, new Vector2(400+30, HEIGHT-250-30), new Vector2(300, 60), BodyDef.BodyType.KinematicBody));
+        block2.setHeight(60);
+        block2.setWidth(300);
+        block2.setName("Podium");
+
+        worldObjects.add(block2);
+        collisionListener.registerWorldObject(block2);
+
+        Block block3 = new Block(BodyFactory.getBlockBody(world, new Vector2(880, HEIGHT-450-30), new Vector2(300, 60), BodyDef.BodyType.KinematicBody));
+        block3.setHeight(60);
+        block3.setWidth(300);
+        block3.setName("Podium2");
+
+        worldObjects.add(block3);
+        collisionListener.registerWorldObject(block3);
+
+        Block exitStop = new Block(BodyFactory.getBlockBody(world, new Vector2(840, HEIGHT-180), new Vector2(60, 300), BodyDef.BodyType.KinematicBody));
+        exitStop.setHeight(300);
+        exitStop.setWidth(60);
+        exitStop.setName("ExitBlock");
+
+        exitStop.addState(new Vector2(840, HEIGHT-180));
+        exitStop.addState(new Vector2(840, HEIGHT+150));
+
+        worldObjects.add(exitStop);
+        collisionListener.registerWorldObject(exitStop);
+
+        Switch button = new Switch(BodyFactory.getBody(world, new Vector2(350, HEIGHT - 340 - 30), new Vector2(60, 60), BodyDef.BodyType.StaticBody), block);
+        button.getBody().getFixtureList().get(0).setSensor(true);
+        button.setName("Button");
+
+        worldObjects.add(button);
+        Switch swch = new Switch(BodyFactory.getBody(world, new Vector2(780, HEIGHT - 100),new Vector2(60,60),BodyDef.BodyType.StaticBody),block);
+        swch.setName("Switch");
+        swch.getBody().getFixtureList().get(0).setSensor(true);
+
+        worldObjects.add(swch);
+        collisionListener.registerWorldObject(swch);
+
+        FloorButton fbut = new FloorButton(BodyFactory.getBody(world, new Vector2(900, HEIGHT - 510), new Vector2(100, 15), BodyDef.BodyType.StaticBody), exitStop);
+        fbut.getBody().getFixtureList().get(0).setSensor(true);
+        fbut.setName("fbutton");
+
+        worldObjects.add(fbut);
+
+        Box box = new Box(BodyFactory.getBoxBody(world,new Vector2(WIDTH/2-WIDTH/4+100,HEIGHT-350),new Vector2(90,90)));
+        box.setTexture("Star");
+        box.setName("Box");
+        box.setHeight(90);
+        box.setWidth(90);
+
+        worldObjects.add(box);
+
+        collisionListener.registerWorldObject(box);
+        collisionListener.registerWorldObject(fbut);
         collisionListener.registerWorldObject(button);
         collisionListener.registerWorldObject(block);
     }
