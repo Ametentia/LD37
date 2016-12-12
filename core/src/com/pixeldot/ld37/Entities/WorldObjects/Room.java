@@ -30,6 +30,7 @@ public class Room extends WorldObject {
     private Vector2 endRunPos;
     private boolean runDone = false;
     private float timeSince = 0;
+    private boolean soundStart = false;
 
     public Room(Body body) {
         super(body);
@@ -48,11 +49,16 @@ public class Room extends WorldObject {
 
     public void update(float dt) {
         if(endRun){
+            if(!soundStart) {
+                ContentManager.getRandomSound("Walk",1,3).play();
+                soundStart=true;
+            }
             timeSince+=dt;
             endRunPos.set(endRunPos.x-120*dt/PPM,endRunPos.y+1.5f*(float)Math.sin(timeSince* 20f)/PPM);
             if(endRunPos.x<350/PPM) {
                 endRun = false;
                 runDone = true;
+                ContentManager.stopRandomNoise("Walk",1,3);
             }
         }
     }

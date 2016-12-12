@@ -12,6 +12,7 @@ import com.pixeldot.ld37.Utilities.ContentManager;
 
 import java.util.ArrayList;
 
+import static com.pixeldot.ld37.Game.HEIGHT;
 import static com.pixeldot.ld37.Game.PPM;
 
 /**
@@ -84,7 +85,7 @@ public class Block extends WorldObject implements Triggerable {
 
     public void render(SpriteBatch batch) {
         batch.draw(texture, body.getPosition().x * PPM - (width / 2), body.getPosition().y * PPM - (height / 2),
-                width, height, 0, 0, texture.getWidth(), texture.getHeight(), false, true);
+                width, height, 0, 0, 1500, 5000, false, true);
     }
 
     public void onCollisionBegin(WorldObject worldObject, Contact contact) {}

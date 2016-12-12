@@ -12,6 +12,7 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.pixeldot.ld37.Utilities.ContentManager;
 import com.pixeldot.ld37.Utilities.GameStateManager;
 
 public class Game extends ApplicationAdapter {
@@ -58,9 +59,10 @@ public class Game extends ApplicationAdapter {
 
         batch = new SpriteBatch();
         renderer = new ShapeRenderer();
+        loadSounds();
 
         gsm = new GameStateManager(this);
-        gsm.pushState(GameStateManager.LEVEL1);
+        gsm.pushState(GameStateManager.LEVEL4);
 
         accum = 0;
 	}
@@ -104,6 +106,27 @@ public class Game extends ApplicationAdapter {
     public ShapeRenderer getRenderer() { return renderer; }
 
     private void loadSounds(){
-        
+        ContentManager.loadSound("Jump1","/Jumps/finger_jump_1.mp3");
+        ContentManager.loadSound("Jump2","/Jumps/finger_jump_2.mp3");
+        ContentManager.loadSound("Jump3","/Jumps/finger_jump_3.mp3");
+
+        ContentManager.loadSound("Land1","/Lands/card_land_1.mp3");
+        ContentManager.loadSound("Land2","/Lands/card_land_2.mp3");
+        ContentManager.loadSound("Land3","/Lands/card_land_3.mp3");
+        ContentManager.loadSound("Land4","/Lands/box_land_1.mp3");
+        ContentManager.loadSound("Land5","/Lands/box_land_2.mp3");
+        ContentManager.loadSound("Land6","/Lands/box_land_3.mp3");
+        ContentManager.loadSound("Land7","/Lands/finger_lands_1.mp3");
+        ContentManager.loadSound("Land8","/Lands/finger_lands_2.mp3");
+        ContentManager.loadSound("Land9","/Lands/finger_lands_3.mp3");
+        ContentManager.loadSound("Land10","/Lands/phone_land_1.mp3");
+
+        ContentManager.loadSound("Walk1","Walks/card_walk.mp3");
+        ContentManager.loadSound("Walk2","Walks/finger_walk.mp3");
+        ContentManager.loadSound("Walk3","Walks/finger_walk_high_pass.mp3");
+
+        ContentManager.loadMusic("Ticking", "Ticking.mp3");
+        ContentManager.getMusic("Ticking").setLooping(true);
+        ContentManager.getMusic("Ticking").play();
     }
 }

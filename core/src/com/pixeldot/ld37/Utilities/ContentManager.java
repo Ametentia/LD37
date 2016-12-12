@@ -76,4 +76,16 @@ public class ContentManager {
 
         return music.get(name);
     }
+    public static Sound getRandomSound(String name, int min, int max){
+        int num = min +(int)(Math.random()*(max-min)+1);
+        if(!sounds.containsKey(name+num))
+            throw new IllegalArgumentException("Error: Unknown Sound Effect " + name+num);
+
+        return sounds.get(name+num);
+    }
+    public static void stopRandomNoise(String name, int min, int max){
+        for(int i = min; i < max+1;i++){
+            sounds.get(name+i).stop();
+        }
+    }
 }
