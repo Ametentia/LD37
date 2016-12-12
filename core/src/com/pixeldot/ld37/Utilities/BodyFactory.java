@@ -27,6 +27,36 @@ public class BodyFactory {
 
         b.createFixture(fixtureDef).setUserData("");
 
+
+        return b;
+    }
+    public static Body getBlockBody(World world, Vector2 position, Vector2 size, BodyDef.BodyType type) {
+        BodyDef bodyDef = new BodyDef();
+        FixtureDef fixtureDef = new FixtureDef();
+        PolygonShape shape = new PolygonShape();
+
+        bodyDef.fixedRotation = true;
+        bodyDef.position.set(position.x / PPM, position.y / PPM);
+        bodyDef.type = type;
+
+        Body b = world.createBody(bodyDef);
+
+        shape.setAsBox((size.x / 2) / PPM, (size.y / 2) / PPM);
+
+
+        fixtureDef.shape = shape;
+        fixtureDef.friction = 0.1f;
+        b.createFixture(fixtureDef).setUserData("");
+
+        fixtureDef = new FixtureDef();
+        shape.setAsBox(size.x/2 / PPM, 10 / PPM, new Vector2(0,-size.y/2/PPM),0);
+        fixtureDef.isSensor = true;
+        fixtureDef.shape = shape;
+        b.createFixture(fixtureDef).setUserData("Bottom");
+
+        shape.dispose();
+
+
         return b;
     }
 
@@ -68,6 +98,7 @@ public class BodyFactory {
     public static Body getBoxBody(World world, Vector2 position, Vector2 size) {
 
         Body boxBody = getBody(world, position, size, BodyDef.BodyType.DynamicBody);
+        boxBody.setUserData("Box");
 
         FixtureDef fixtureDef = new FixtureDef();
         PolygonShape shape = new PolygonShape();

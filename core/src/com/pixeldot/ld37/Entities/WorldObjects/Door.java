@@ -3,6 +3,7 @@ package com.pixeldot.ld37.Entities.WorldObjects;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Contact;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.pixeldot.ld37.Entities.Interfaces.Triggerable;
 import com.pixeldot.ld37.Entities.WorldObject;
 import com.pixeldot.ld37.Utilities.Animation;
@@ -13,6 +14,7 @@ public class Door extends WorldObject implements Triggerable {
     private Animation animation;
     private boolean isOpen;
     private boolean isExit;
+    private boolean playerAdded = false;
 
     public Door(Body body, boolean isExit) {
         super(body);
@@ -26,6 +28,12 @@ public class Door extends WorldObject implements Triggerable {
 
     public void update(float dt) {
         animation.update(dt);
+    }
+
+    public void setClosed(){
+        animation = new Animation("Closed", ContentManager.getTexture("DoorClosed"), 1, 1);
+        animation.setTargetWidth(125);
+        animation.setTargetHeight(106);
     }
 
     public void onTrigger() {
@@ -48,9 +56,29 @@ public class Door extends WorldObject implements Triggerable {
         animation.render(batch, body.getPosition());
     }
 
-    public void onCollisionBegin(WorldObject worldObject, Contact contact) {}
+    public void onCollisionBegin(WorldObject worldObject, Contact contact) {
+        Fixture a = contact.getFixtureA();
+        Fixture b = contact.getFixtureB();
+
+        if(a != null && b.getUserData().equals("Foot"))
+            System.out.println("Door contact A: " + a.getUserData() +" door B:" + b.getUserData());
+        if(b != null && a.getUserData().equals("Foot"))
+            System.out.println("Door contact A: " + a.getUserData() +" door B:" + b.getUserData());
+    }
     public void onCollisionEnd(WorldObject worldObject, Contact contact) {}
 
     public boolean isOpen() { return isOpen; }
     public boolean isExit() { return isExit; }
+
+    public Animation getAnimation() {
+        return animation;
+    }
+
+    public boolean isPlayerAdded() {
+        return playerAdded;
+    }
+
+    public void setPlayerAdded(boolean playerAdded) {
+        this.playerAdded = playerAdded;
+    }
 }

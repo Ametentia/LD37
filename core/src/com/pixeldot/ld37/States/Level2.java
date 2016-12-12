@@ -10,26 +10,26 @@ import com.pixeldot.ld37.Utilities.*;
 
 import java.util.ArrayList;
 
-import static com.pixeldot.ld37.Game.HEIGHT;
-import static com.pixeldot.ld37.Game.PPM;
-import static com.pixeldot.ld37.Game.WIDTH;
+import static com.pixeldot.ld37.Game.*;
 
-public class Testing extends State {
+public class Level2 extends State {
 
     private ArrayList<WorldObject> worldObjects;
     private Player player;
     private CollisionListener collisionListener;
     private Door exit;
+    private Door entrance;
 
-    public Testing(GameStateManager gsm) {
+    public Level2(GameStateManager gsm) {
         super(gsm);
-
+        world = new World(new Vector2(0, 9.81f), true);
         worldObjects = new ArrayList<>();
         world.setContactListener(collisionListener = new CollisionListener());
 
         ContentManager.loadTexture("PlayerRun", "Character/spritesheetSmol.png");
         ContentManager.loadTexture("PlayerWall", "Character/pushSpriteSheet.png");
         ContentManager.loadTexture("PlayerIdle", "Character/idleSpriteSheet.png");
+        ContentManager.loadTexture("Shadow", "Character/shadow.png");
         ContentManager.loadTexture("Rice", "Materials/SpringSummerAutumnBackground.png");
         ContentManager.loadTexture("Background", "Materials/Background.png");
         ContentManager.loadTexture("LeftAutumn", "Side Panels/autumnLeftSlide.png");
@@ -60,20 +60,21 @@ public class Testing extends State {
         worldObjects.add(exit);
 
 
-        Block block = new Block(BodyFactory.getBody(world, new Vector2(WIDTH / 2, HEIGHT / 2), new Vector2(100, HEIGHT), BodyDef.BodyType.KinematicBody));
+        Block block = new Block(BodyFactory.getBlockBody(world, new Vector2(WIDTH/ 2 + WIDTH/8, HEIGHT -140), new Vector2(100, 225), BodyDef.BodyType.KinematicBody));
         block.setName("Pillar");
         block.setWidth(100);
-        block.setHeight(HEIGHT);
-        block.addState(new Vector2(WIDTH / 2, HEIGHT / 2));
-        block.addState(new Vector2(WIDTH / 2, HEIGHT + (HEIGHT / 2)));
+        block.setHeight(225);
 
         worldObjects.add(block);
 
-        Switch swtch = new Switch(BodyFactory.getBody(world, new Vector2(500, HEIGHT - 100), new Vector2(60, 90), BodyDef.BodyType.StaticBody), block);
-        swtch.setName("Switch");
-        swtch.getBody().getFixtureList().get(0).setSensor(true);
+        Box box = new Box(BodyFactory.getBoxBody(world,new Vector2(WIDTH/2-WIDTH/8,HEIGHT-131),new Vector2(90,90)));
+        box.setTexture("Diamond");
+        box.setName("Box");
+        box.setHeight(90);
+        box.setWidth(90);
 
-        worldObjects.add(swtch);
+        worldObjects.add(box);
+
 
         PolygonShape shape = new PolygonShape();
         FixtureDef fixtureDef = new FixtureDef();
@@ -83,7 +84,7 @@ public class Testing extends State {
         Animation idle = new Animation("Idle", ContentManager.getTexture("PlayerIdle"), 6, 4);
         idle.setTargetHeight(90);
         idle.setTargetWidth(60);
-        player = new Player(BodyFactory.getBody(world, new Vector2(400, 400), new Vector2(60, 90), BodyDef.BodyType.DynamicBody), world, idle);
+        player = new Player(BodyFactory.getBody(world, new Vector2(355, HEIGHT - 86), new Vector2(60, 90), BodyDef.BodyType.DynamicBody), world, idle);
         player.setName("Player");
         Animation a = new Animation("Run", ContentManager.getTexture("PlayerRun"), 2, 4);
         a.setTargetWidth(60);
@@ -103,11 +104,16 @@ public class Testing extends State {
 
         worldObjects.add(player);
 
-        collisionListener.registerWorldObject(swtch);
+
         collisionListener.registerWorldObject(entrance);
         collisionListener.registerWorldObject(player);
         collisionListener.registerWorldObject(room);
+        collisionListener.registerWorldObject(block);
         collisionListener.registerWorldObject(exit);
+        collisionListener.registerWorldObject(box);
+        player.setAlive(false);
+        entrance.onTrigger();
+        this.entrance = entrance;
     }
 
     public void update(float dt) {
@@ -118,7 +124,12 @@ public class Testing extends State {
         for(WorldObject worldObject : worldObjects) {
             worldObject.update(dt);
         }
-
+        endSequence();
+        if(!entrance.isPlayerAdded() && entrance.getAnimation().isFinished()) {
+            player.setAlive(true);
+            entrance.setPlayerAdded(true);
+            entrance.setClosed();
+        }
         world.step(dt, 6, 2);
     }
     public void render() {
@@ -130,8 +141,29 @@ public class Testing extends State {
         batch.end();
 
         // Debug Render Bodies
-        debugRenderer.render(world, box2DCam.combined);
+        //debugRenderer.render(world, box2DCam.combined);
     }
-
+    public void endSequence(){
+        if(!player.isAlive() && player.isCanExit()) {
+            Room r = null;
+            boolean doorFinished = false;
+            for (WorldObject wo : worldObjects) {
+                if (wo instanceof Room) {
+                    r = (Room) wo;
+                }
+                else if(wo instanceof Door){
+                        doorFinished=((Door) wo).getAnimation().isFinished();
+                }
+            }
+            if (null != r && doorFinished && !r.isRunDone()) {
+                r.setEndRun(true);
+            }
+            else if(null != r && doorFinished && r.isRunDone())
+            {
+                gsm.popState();
+                gsm.pushState(GameStateManager.LEVEL3);
+            }
+        }
+    }
     public void dispose() {}
 }

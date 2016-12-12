@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.joints.DistanceJointDef;
+import com.pixeldot.ld37.Entities.WorldObjects.Door;
 import com.pixeldot.ld37.Entities.WorldObjects.Switch;
 import com.pixeldot.ld37.Utilities.Animation;
 
@@ -31,6 +32,8 @@ public class Player extends WorldObject {
 
     private Switch currentSwitch;
     private boolean canSwitch = false;
+    private boolean canExit = false;
+    private Door exitDoor;
 
     public Player(Body body, World world, Animation...anim) {
         super(body);
@@ -62,7 +65,7 @@ public class Player extends WorldObject {
             currentAnimation = !prevAnimation.equals("") ? prevAnimation : currentAnimation;
         }
 
-        if(Gdx.input.isKeyPressed(Input.Keys.A)) {
+        if(Gdx.input.isKeyPressed(Input.Keys.A) && alive) {
             body.applyForceToCenter(-700  / PPM, 0, true);
 
             currentAnimation = "Run";
@@ -70,23 +73,19 @@ public class Player extends WorldObject {
 
             animations.get(currentAnimation).setFlipX(true);
             animations.get("Idle").setFlipX(true);
-            animations.get(currentAnimation).setStartFrame(1);
 
         }
-        else if(Gdx.input.isKeyPressed(Input.Keys.D)) {
+        else if(Gdx.input.isKeyPressed(Input.Keys.D) && alive) {
             body.applyForceToCenter(700  / PPM, 0, true);
+
             currentAnimation = "Run";
             animations.get(currentAnimation).setStartFrame(1);
 
             animations.get(currentAnimation).setFlipX(false);
             animations.get("Idle").setFlipX(false);
         }
-        else
-        {
-            currentAnimation = "Idle";
-        }
 
-        if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE) && onGround && !Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)) {
+        if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE) && onGround && !Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT) && alive) {
             body.applyForceToCenter(0, -5700 * 7.5f / PPM, true);
         }
 
@@ -96,7 +95,6 @@ public class Player extends WorldObject {
             isPulling = true;
             createJoint = false;
         }
-
         if(isPulling && !Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)) {
             world.destroyJoint(pullingJoint);
             isPulling = false;
@@ -105,13 +103,25 @@ public class Player extends WorldObject {
             pullingJoint = null;
         }
 
+
         if(canSwitch && currentSwitch != null && Gdx.input.isKeyJustPressed(Input.Keys.E)) {
             currentSwitch.flick();
+        }
+        else if(exitDoor != null &&Gdx.input.isKeyJustPressed(Input.Keys.E) && canExit){
+            alive=false;
+            exitDoor.offTrigger();
+        }
+
+        if(!Gdx.input.isKeyPressed(Input.Keys.A) && !Gdx.input.isKeyPressed(Input.Keys.D))
+        {
+            currentAnimation = "Idle";
         }
     }
 
     public void render(SpriteBatch batch) {
-        animations.get(currentAnimation).render(batch, body.getPosition());
+        if(alive){
+            animations.get(currentAnimation).render(batch, body.getPosition());
+        }
     }
 
     public void onCollisionBegin(WorldObject worldObject, Contact contact) {
@@ -126,20 +136,33 @@ public class Player extends WorldObject {
         }
 
 
-        if(( a.getUserData() != null || b.getUserData() != null )&& (a.getUserData().equals("BoxRight") || a.getUserData().equals("BoxLeft")) ||
-                (b.getUserData().equals("BoxRight") || b.getUserData().equals("BoxLeft"))) {
+        if(( a.getUserData() != null)&&  b.getUserData().equals("BoxLeft")|| b.getUserData().equals("BoxRight")){
             jointDef = new DistanceJointDef();
             createJoint = true;
             jointDef.length = 83 / PPM;
             jointDef.collideConnected = true;
             jointDef.bodyB = worldObject.getBody();
             jointDef.bodyA = body;
+            pushing = true;
         }
-
+        else if(b.getUserData() != null && (a.getUserData().equals("BoxRight") || a.getUserData().equals("BoxLeft"))){
+            jointDef = new DistanceJointDef();
+            createJoint = true;
+            jointDef.length = 83 / PPM;
+            jointDef.collideConnected = true;
+            jointDef.bodyB = worldObject.getBody();
+            jointDef.bodyA = body;
+            pushing = true;
+        }
         if(worldObject instanceof Switch) {
             currentSwitch = (Switch) worldObject;
             canSwitch = true;
         }
+        if(worldObject instanceof Door && ((Door) worldObject).isExit()){
+            canExit=true;
+            exitDoor=(Door)worldObject;
+        }
+
     }
     public void onCollisionEnd(WorldObject worldObject, Contact contact) {
         Fixture a = contact.getFixtureA();
@@ -161,6 +184,11 @@ public class Player extends WorldObject {
             canSwitch = false;
             currentSwitch = null;
         }
+        if(worldObject instanceof Door && ((Door) worldObject).isExit()){
+            canExit=false;
+            exitDoor=null;
+        }
+
     }
 
     public void dispose() {}
@@ -173,4 +201,12 @@ public class Player extends WorldObject {
 
     public Animation getCurAnim() { return animations.get(currentAnimation); }
     public void setOnGround(boolean onGround) { this.onGround = onGround; }
+
+    public boolean isCanExit() {
+        return canExit;
+    }
+
+    public void setAlive(boolean alive) {
+        this.alive = alive;
+    }
 }
