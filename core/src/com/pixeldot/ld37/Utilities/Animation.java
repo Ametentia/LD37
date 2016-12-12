@@ -86,6 +86,9 @@ public class Animation {
      * @param dt The time since the last frame
      */
     public void update(float dt) {
+        if(maxPlays == totalPlays) {
+            return;
+        }
         sinceLastFrame += dt;
         if(sinceLastFrame >= timePerFrame) {
             sinceLastFrame -= timePerFrame;
@@ -96,6 +99,7 @@ public class Animation {
                 totalPlays++;
                 if(totalPlays == maxPlays) {
                     finished = true;
+                    currentFrame=endFrame-1;
                 }
             }
         }

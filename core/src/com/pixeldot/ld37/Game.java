@@ -60,7 +60,7 @@ public class Game extends ApplicationAdapter {
         renderer = new ShapeRenderer();
 
         gsm = new GameStateManager(this);
-        gsm.pushState(GameStateManager.PLAY);
+        gsm.pushState(GameStateManager.LEVEL1);
 
         accum = 0;
 	}
@@ -102,4 +102,8 @@ public class Game extends ApplicationAdapter {
 
     public SpriteBatch getBatch() { return batch; }
     public ShapeRenderer getRenderer() { return renderer; }
+
+    private void loadSounds(){
+        
+    }
 }

@@ -43,7 +43,7 @@ public class Switch extends WorldObject {
             texture = ContentManager.getTexture("SwitchOn");
         }
         else {
-            target.offTrigger();;
+            target.offTrigger();
             texture = ContentManager.getTexture("SwitchOff");
         }
     }
