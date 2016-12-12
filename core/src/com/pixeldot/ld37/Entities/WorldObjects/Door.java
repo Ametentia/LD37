@@ -3,7 +3,6 @@ package com.pixeldot.ld37.Entities.WorldObjects;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Contact;
-import com.badlogic.gdx.physics.box2d.Fixture;
 import com.pixeldot.ld37.Entities.Interfaces.Triggerable;
 import com.pixeldot.ld37.Entities.WorldObject;
 import com.pixeldot.ld37.Utilities.Animation;

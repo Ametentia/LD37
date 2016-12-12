@@ -23,13 +23,14 @@ public class BodyFactory {
         shape.setAsBox((size.x / 2) / PPM, (size.y / 2) / PPM);
 
         fixtureDef.shape = shape;
+        fixtureDef.friction = 0.1f;
 
         b.createFixture(fixtureDef).setUserData("");
 
         return b;
     }
 
-    public static Body getWorldBody(World world) {
+    public static Body getRoomBody(World world) {
 
         BodyDef bodyDef = new BodyDef();
         FixtureDef fixtureDef = new FixtureDef();
@@ -62,5 +63,27 @@ public class BodyFactory {
         shape.dispose();
 
         return room;
+    }
+
+    public static Body getBoxBody(World world, Vector2 position, Vector2 size) {
+
+        Body boxBody = getBody(world, position, size, BodyDef.BodyType.DynamicBody);
+
+        FixtureDef fixtureDef = new FixtureDef();
+        PolygonShape shape = new PolygonShape();
+
+        fixtureDef.isSensor = true;
+        fixtureDef.shape = shape;
+
+        shape.setAsBox(8 / PPM, 8 / PPM, new Vector2((-size.x / 2) / PPM, 0), 0);
+        boxBody.createFixture(fixtureDef).setUserData("BoxLeft");
+
+        shape.setAsBox(8 / PPM, 8 / PPM, new Vector2((size.x / 2) / PPM, 0), 0);
+        boxBody.createFixture(fixtureDef).setUserData("BoxRight");
+
+        shape.setAsBox((size.x / 2) / PPM, 8 / PPM, new Vector2(0, (-size.y / 2) / PPM), 0);
+        boxBody.createFixture(fixtureDef).setUserData("Bottom");
+
+        return boxBody;
     }
 }

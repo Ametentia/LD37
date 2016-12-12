@@ -51,6 +51,8 @@ public class Player extends WorldObject {
             currentAnimation = currentAnimation.equals("") ? a.getName() : currentAnimation;
             prevAnimation = prevAnimation.equals("") ? a.getName() : prevAnimation;
         }
+
+        body.setLinearDamping(2);
     }
 
     public void update(float dt) {
@@ -91,8 +93,8 @@ public class Player extends WorldObject {
             currentAnimation = "Idle";
         }
 
-        if(Gdx.input.isKeyPressed(Input.Keys.SPACE) && onGround && !Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)) {
-            body.applyForceToCenter(0, -5700 / PPM, true);
+        if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE) && onGround && !Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)) {
+            body.applyForceToCenter(0, -5700 * 7.5f / PPM, true);
         }
 
         // Pulling Stuffs

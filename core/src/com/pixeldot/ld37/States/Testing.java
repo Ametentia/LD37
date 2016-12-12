@@ -45,7 +45,7 @@ public class Testing extends State {
         ContentManager.loadTexture("SwitchOff", "World Objects/leverOFF.png");
         ContentManager.loadTexture("SwitchOn", "World Objects/leverON.png");
 
-        Room room = new Room(BodyFactory.getWorldBody(world));
+        Room room = new Room(BodyFactory.getRoomBody(world));
         room.setName("MainRoom");
         worldObjects.add(room);
 
@@ -54,31 +54,23 @@ public class Testing extends State {
 
         worldObjects.add(entrance);
 
-        PolygonShape shape = new PolygonShape();
-        FixtureDef fixtureDef = new FixtureDef();
-        Box box = new Box(BodyFactory.getBody(world, new Vector2(640, 360), new Vector2(100, 100), BodyDef.BodyType.DynamicBody));
-        box.setName("Box");
-        box.setWidth(100);
-        box.setHeight(100);
-
-        Body boxBody = box.getBody();
-
-        fixtureDef.shape = shape;
-        fixtureDef.isSensor = true;
-
-        shape.setAsBox(8 / PPM, 8 / PPM, new Vector2(-50 / PPM, 0), 0);
-        boxBody.createFixture(fixtureDef).setUserData("BoxLeft");
-
-        shape.setAsBox(8 / PPM, 8 / PPM, new Vector2(50 / PPM, 0), 0);
-        boxBody.createFixture(fixtureDef).setUserData("BoxRight");
-        worldObjects.add(box);
-
         Switch swtch = new Switch(BodyFactory.getBody(world, new Vector2(WIDTH - 400, HEIGHT - 100), new Vector2(60, 90), BodyDef.BodyType.StaticBody), entrance);
         swtch.setName("Switch");
         swtch.getBody().getFixtureList().get(0).setSensor(true);
 
         worldObjects.add(swtch);
 
+        PolygonShape shape = new PolygonShape();
+        FixtureDef fixtureDef = new FixtureDef();
+        Box box = new Box(BodyFactory.getBoxBody(world, new Vector2(640, 360), new Vector2(100, 100)));
+        box.setName("Box");
+        box.setWidth(100);
+        box.setHeight(100);
+
+        worldObjects.add(box);
+
+
+        fixtureDef.shape = shape;
 
         Animation idle = new Animation("Idle", ContentManager.getTexture("PlayerIdle"), 6, 4);
         idle.setTargetHeight(90);
