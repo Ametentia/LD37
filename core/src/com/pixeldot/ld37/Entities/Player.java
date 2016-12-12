@@ -126,7 +126,7 @@ public class Player extends WorldObject {
         if(canSwitch && currentSwitch != null && Gdx.input.isKeyJustPressed(Input.Keys.E)) {
             currentSwitch.flick();
         }
-        else if(exitDoor != null &&Gdx.input.isKeyJustPressed(Input.Keys.E) && canExit){
+        else if(exitDoor != null &&Gdx.input.isKeyJustPressed(Input.Keys.E) && canExit && alive){
             alive=false;
             exitDoor.offTrigger();
         }

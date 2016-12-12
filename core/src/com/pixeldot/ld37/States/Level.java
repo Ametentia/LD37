@@ -257,13 +257,14 @@ public class Level extends State {
         collisionListener.registerWorldObject(box);
     }
     public void setupLevel4(){
-        Block block = new Block(BodyFactory.getBlockBody(world, new Vector2(WIDTH / 2, HEIGHT - (HEIGHT / 4)), new Vector2(60, HEIGHT / 4), BodyDef.BodyType.KinematicBody));
-        block.setHeight(HEIGHT / 4);
+        Block block = new Block(BodyFactory.getBlockBody(world, new Vector2(WIDTH / 2+WIDTH/8, HEIGHT - (HEIGHT / 4)), new Vector2(60, HEIGHT / 2), BodyDef.BodyType.KinematicBody));
+        block.setHeight(HEIGHT / 2);
         block.setWidth(60);
         block.setName("Block");
 
-        block.addState(new Vector2(WIDTH / 2, HEIGHT - 30));
-        block.addState(new Vector2(WIDTH / 2, HEIGHT - (HEIGHT / 4)));
+        block.addState(new Vector2(WIDTH / 2+WIDTH/8, HEIGHT - (HEIGHT / 4)));
+        block.addState(new Vector2(WIDTH / 2+WIDTH/8, HEIGHT - 30));
+
 
         FloorButton button = new FloorButton(BodyFactory.getBody(world, new Vector2(540, HEIGHT - 40), new Vector2(100, 15), BodyDef.BodyType.StaticBody), block);
         button.getBody().getFixtureList().get(0).setSensor(true);
@@ -272,6 +273,15 @@ public class Level extends State {
         worldObjects.add(button);
         worldObjects.add(block);
 
+        Box box = new Box(BodyFactory.getBoxBody(world,new Vector2(WIDTH/2+WIDTH/16,HEIGHT-131),new Vector2(90,90)));
+        box.setTexture("Diamond");
+        box.setName("Box");
+        box.setHeight(90);
+        box.setWidth(90);
+
+        worldObjects.add(box);
+
+        collisionListener.registerWorldObject(box);
         collisionListener.registerWorldObject(button);
         collisionListener.registerWorldObject(block);
     }
