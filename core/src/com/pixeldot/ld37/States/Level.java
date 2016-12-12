@@ -1,12 +1,15 @@
 package com.pixeldot.ld37.States;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.pixeldot.ld37.Entities.Player;
 import com.pixeldot.ld37.Entities.WorldObject;
 import com.pixeldot.ld37.Entities.WorldObjects.*;
 import com.pixeldot.ld37.Utilities.*;
+import sun.font.TrueTypeFont;
 
 import java.util.ArrayList;
 
@@ -22,6 +25,7 @@ public class Level extends State {
     private Door exit;
     private Door entrance;
     private int level;
+    private BitmapFont font = new BitmapFont(true);
 
     public Level(GameStateManager gsm, int level) {
         super(gsm);
@@ -64,6 +68,7 @@ public class Level extends State {
         exit.setName("ExitDoor");
         worldObjects.add(exit);
 
+        System.out.println(level);
         switch (level) {
             case 1:
                 setupLevel1();
@@ -73,6 +78,9 @@ public class Level extends State {
                 break;
             case 3:
                 setupLevel3();
+                break;
+            case 4:
+                setupLevel4();
                 break;
         }
         PolygonShape shape = new PolygonShape();
@@ -111,6 +119,7 @@ public class Level extends State {
         player.setAlive(false);
         entrance.onTrigger();
         this.entrance = entrance;
+        font = new BitmapFont();
     }
 
     public void update(float dt) {
@@ -137,6 +146,7 @@ public class Level extends State {
         }
         batch.end();
 
+
         // Debug Render Bodies
         //debugRenderer.render(world, box2DCam.combined);
     }
@@ -157,8 +167,12 @@ public class Level extends State {
             }
             else if(null != r && doorFinished && r.isRunDone())
             {
-                gsm.popState();
-                gsm.pushState(GameStateManager.LEVELS[level]);
+                if(level == GameStateManager.LEVELS.length) {
+                    System.out.println("FINISHED!");
+                }
+                else {
+                    gsm.setState(GameStateManager.LEVELS[level]);
+                }
             }
         }
     }
@@ -240,6 +254,9 @@ public class Level extends State {
         collisionListener.registerWorldObject(block2);
         collisionListener.registerWorldObject(block3);
         collisionListener.registerWorldObject(box);
+    }
+    public void setupLevel4(){
+
     }
 
 }

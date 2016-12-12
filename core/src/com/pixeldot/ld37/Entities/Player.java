@@ -8,6 +8,7 @@ import com.badlogic.gdx.physics.box2d.joints.DistanceJointDef;
 import com.pixeldot.ld37.Entities.WorldObjects.Door;
 import com.pixeldot.ld37.Entities.WorldObjects.Switch;
 import com.pixeldot.ld37.Utilities.Animation;
+import com.pixeldot.ld37.Utilities.ContentManager;
 
 import java.util.HashMap;
 
@@ -30,6 +31,8 @@ public class Player extends WorldObject {
     private DistanceJointDef jointDef;
     private boolean createJoint;
 
+    private boolean walking;
+
     private Switch currentSwitch;
     private boolean canSwitch = false;
     private boolean canExit = false;
@@ -39,6 +42,7 @@ public class Player extends WorldObject {
         super(body);
         this.body = body;
         this.world = world;
+        walking=false;
 
         jointDef = new DistanceJointDef();
         //isPulling = false;
@@ -70,6 +74,11 @@ public class Player extends WorldObject {
 
             currentAnimation = "Run";
             animations.get(currentAnimation).setStartFrame(1);
+            if(!walking && onGround){
+                walking=true;
+                System.out.println("Started walk sound");
+                ContentManager.getRandomSound("Walk",1,3).play();
+            }
 
             animations.get(currentAnimation).setFlipX(true);
             animations.get("Idle").setFlipX(true);
@@ -78,6 +87,10 @@ public class Player extends WorldObject {
         else if(Gdx.input.isKeyPressed(Input.Keys.D) && alive) {
             body.applyForceToCenter(700  / PPM, 0, true);
 
+            if(!walking && onGround){
+                walking=true;
+                ContentManager.getRandomSound("Walk",1,3).play();
+            }
             currentAnimation = "Run";
             animations.get(currentAnimation).setStartFrame(1);
 
@@ -87,6 +100,12 @@ public class Player extends WorldObject {
 
         if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE) && onGround && !Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT) && alive) {
             body.applyForceToCenter(0, -5700 * 7.5f / PPM, true);
+            ContentManager.getRandomSound("Jump",1,3).play();
+            if(walking){
+                ContentManager.stopRandomNoise("Walk",1,3);
+                walking=false;
+                System.out.println("Stop");
+            }
         }
 
         // Pulling Stuffs
@@ -115,6 +134,10 @@ public class Player extends WorldObject {
         if(!Gdx.input.isKeyPressed(Input.Keys.A) && !Gdx.input.isKeyPressed(Input.Keys.D))
         {
             currentAnimation = "Idle";
+            if(walking){
+                walking=false;
+                ContentManager.stopRandomNoise("Walk",1,3);
+            }
         }
     }
 
@@ -145,7 +168,8 @@ public class Player extends WorldObject {
             jointDef.bodyA = body;
             pushing = true;
         }
-        else if(b.getUserData() != null && (a.getUserData().equals("BoxRight") || a.getUserData().equals("BoxLeft"))){
+        else if(b.getUserData() != null && (a.getUserData().equals("BoxRight") || a.getUserData().equals("BoxLeft")))
+        {
             jointDef = new DistanceJointDef();
             createJoint = true;
             jointDef.length = 83 / PPM;
@@ -178,6 +202,15 @@ public class Player extends WorldObject {
             if(b.getUserData() != null && b.getUserData().equals("Bottom")) {
                 onGround = false;
             }
+        }
+
+        if(a.getUserData() != null && (a.getUserData().equals("BoxLeft") || a.getUserData().equals("BoxRight"))) {
+            jointDef = null;
+            createJoint = false;
+        }
+        else if(b.getUserData() != null && (b.getUserData().equals("BoxLeft") || b.getUserData().equals("BoxRight"))) {
+            jointDef = null;
+            createJoint = false;
         }
 
         if(currentSwitch != null && currentSwitch.equals(worldObject)) {
