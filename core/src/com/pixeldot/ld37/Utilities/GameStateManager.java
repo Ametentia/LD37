@@ -3,6 +3,7 @@ package com.pixeldot.ld37.Utilities;
 import com.pixeldot.ld37.Game;
 import com.pixeldot.ld37.States.Play;
 import com.pixeldot.ld37.States.State;
+import com.pixeldot.ld37.States.Testing;
 
 import java.util.Stack;
 
@@ -11,6 +12,7 @@ public class GameStateManager {
     public static final int MENU = 0;
     public static final int PLAY = 1;
     public static final int PAUSE = 2;
+    public static final int TESTING = 3;
 
     public final Game game;
     private Stack<State> states;
@@ -24,6 +26,8 @@ public class GameStateManager {
         switch (state) {
             case PLAY:
                 return new Play(this);
+            case TESTING:
+                return new Testing(this);
             default:
                 throw new IllegalArgumentException("Error: Unknown State");
         }

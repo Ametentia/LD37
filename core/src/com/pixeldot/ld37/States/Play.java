@@ -221,7 +221,7 @@ public class Play extends State {
         a.setTargetWidth(60);
         a.setTargetHeight(90);
 
-        player = new Player(playerBody, a);
+        player = new Player(playerBody, world, a);
 
         a = new Animation("SquishFace",ContentManager.getTexture("PlayerWall"), 2,4);
         a.setEndFrame(6);
