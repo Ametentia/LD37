@@ -25,6 +25,7 @@ public class Block extends WorldObject implements Triggerable {
     private ArrayList<Vector2> states;
     private int currentState;
     private float moveSpeed;
+    private float tolerance;
 
     private float width, height;
 
@@ -39,6 +40,7 @@ public class Block extends WorldObject implements Triggerable {
         states = new ArrayList<>();
         currentState = 0;
         moveSpeed=100;
+        tolerance = 0.5f;
 
         texture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
         width = texture.getWidth();
@@ -49,7 +51,7 @@ public class Block extends WorldObject implements Triggerable {
         if(states.size() == 0) return;
 
         Vector2 dist = new Vector2(body.getPosition().x * PPM, body.getPosition().y * PPM).sub(states.get(currentState));
-        if(MathUtils.isZero(dist.len(), 5f)) {
+        if(MathUtils.isZero(dist.len(), tolerance)) {
             body.setLinearVelocity(0, 0);
         }
     }
@@ -122,5 +124,6 @@ public class Block extends WorldObject implements Triggerable {
 
     public void setMoveSpeed(float moveSpeed) {
         this.moveSpeed = moveSpeed;
+        tolerance = (moveSpeed / 200);
     }
 }

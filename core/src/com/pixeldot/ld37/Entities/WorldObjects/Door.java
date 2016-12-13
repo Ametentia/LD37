@@ -56,15 +56,7 @@ public class Door extends WorldObject implements Triggerable {
         animation.render(batch, body.getPosition());
     }
 
-    public void onCollisionBegin(WorldObject worldObject, Contact contact) {
-        Fixture a = contact.getFixtureA();
-        Fixture b = contact.getFixtureB();
-
-        if(a != null && b.getUserData().equals("Foot"))
-            System.out.println("Door contact A: " + a.getUserData() +" door B:" + b.getUserData());
-        if(b != null && a.getUserData().equals("Foot"))
-            System.out.println("Door contact A: " + a.getUserData() +" door B:" + b.getUserData());
-    }
+    public void onCollisionBegin(WorldObject worldObject, Contact contact) {}
     public void onCollisionEnd(WorldObject worldObject, Contact contact) {}
 
     public boolean isOpen() { return isOpen; }

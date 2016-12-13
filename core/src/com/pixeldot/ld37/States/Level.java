@@ -146,10 +146,6 @@ public class Level extends State {
     }
 
     public void update(float dt) {
-        if(Gdx.input.isTouched()) {
-            player.getBody().setTransform(Gdx.input.getX() / PPM, Gdx.input.getY() / PPM, 0);
-        }
-
         for(WorldObject worldObject : worldObjects) {
             worldObject.update(dt);
         }
