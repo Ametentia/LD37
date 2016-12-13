@@ -65,7 +65,7 @@ public class Game extends ApplicationAdapter {
         ContentManager.loadTexture("PlayerIdle", "Character/idleSpriteSheet.png");
 
         gsm = new GameStateManager(this);
-        gsm.pushState(GameStateManager.LEVEL5);
+        gsm.pushState(GameStateManager.MENU);
 
         accum = 0;
 	}

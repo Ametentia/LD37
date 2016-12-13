@@ -43,7 +43,7 @@ public class Level extends State {
         ContentManager.loadTexture("RightAutumn", "Side Panels/autumnRightSlide.png");
 
         ContentManager.loadTexture("Diamond", "Materials/diamondTexture.png");
-        ContentManager.loadTexture("Brick", "Materials/brickTexture.png");
+        ContentManager.loadTexture("Brick", "Materials/squareTexture.png");
         ContentManager.loadTexture("Star", "Materials/starDesign.png");
 
         ContentManager.loadTexture("DoorClosed", "Materials/door.png");
@@ -104,6 +104,12 @@ public class Level extends State {
                 break;
             case 6:
                 setupLevel6();
+                break;
+            case 7:
+                setupLevel7();
+                break;
+            case 8:
+                setupLevel8();
                 break;
         }
         PolygonShape shape = new PolygonShape();
@@ -167,7 +173,7 @@ public class Level extends State {
 
 
         // Debug Render Bodies
-        debugRenderer.render(world, box2DCam.combined);
+        //debugRenderer.render(world, box2DCam.combined);
     }
     public void endSequence(){
         if(!player.isAlive() && player.isCanExit()) {
@@ -397,8 +403,140 @@ public class Level extends State {
         swch.setName("Switch");
         swch.getBody().getFixtureList().get(0).setSensor(true);
 
+
+
         worldObjects.add(swch);
         collisionListener.registerWorldObject(swch);
+    }
+
+    public void setupLevel7(){
+        Block trampoline = new Block(BodyFactory.getBlockBody(world, new Vector2(WIDTH/2, HEIGHT-10), new Vector2(50, 80), BodyDef.BodyType.KinematicBody));
+        trampoline.setHeight(80);
+        trampoline.setMoveSpeed(1100);
+        trampoline.setWidth(50);
+        trampoline.setName("trampoline");
+
+        trampoline.addState(new Vector2(WIDTH/2, HEIGHT-10));
+        trampoline.addState(new Vector2(WIDTH/2, HEIGHT-80));
+
+        worldObjects.add(trampoline);
+        collisionListener.registerWorldObject(trampoline);
+
+        Switch swch = new Switch(BodyFactory.getBody(world, new Vector2(WIDTH/2+60, HEIGHT - 100),new Vector2(120,60),BodyDef.BodyType.StaticBody),trampoline);
+        swch.setName("Switch");
+        swch.getBody().getFixtureList().get(0).setSensor(true);
+
+        worldObjects.add(swch);
+        collisionListener.registerWorldObject(swch);
+
+        Block exitStop = new Block(BodyFactory.getBlockBody(world, new Vector2(840, HEIGHT-HEIGHT/2), new Vector2(60, HEIGHT), BodyDef.BodyType.KinematicBody));
+        exitStop.setHeight(HEIGHT);
+        exitStop.setWidth(60);
+        exitStop.setName("ExitBlock");
+
+        exitStop.addState(new Vector2(840, HEIGHT-HEIGHT/2));
+        exitStop.addState(new Vector2(840, HEIGHT));
+
+        worldObjects.add(exitStop);
+        collisionListener.registerWorldObject(exitStop);
+
+        Switch swch2 = new Switch(BodyFactory.getBody(world, new Vector2(WIDTH/2-300, HEIGHT - 500),new Vector2(120,60),BodyDef.BodyType.StaticBody),exitStop);
+        swch2.setName("Switch2");
+        swch2.getBody().getFixtureList().get(0).setSensor(true);
+
+        Block block2 = new Block(BodyFactory.getBlockBody(world, new Vector2(WIDTH/2-300, HEIGHT-400), new Vector2(100, 60), BodyDef.BodyType.KinematicBody));
+        block2.setHeight(60);
+        block2.setWidth(100);
+        block2.setName("Podium");
+
+        worldObjects.add(block2);
+        collisionListener.registerWorldObject(block2);
+
+        worldObjects.add(swch2);
+        collisionListener.registerWorldObject(swch2);
+    }
+    public void setupLevel8() {
+        Block exitStop = new Block(BodyFactory.getBlockBody(world, new Vector2(840, HEIGHT-HEIGHT/2), new Vector2(60, HEIGHT), BodyDef.BodyType.KinematicBody));
+        exitStop.setHeight(HEIGHT);
+        exitStop.setWidth(60);
+        exitStop.setName("ExitBlock");
+        exitStop.addState(new Vector2(840, HEIGHT-HEIGHT/2));
+        exitStop.addState(new Vector2(840, HEIGHT+HEIGHT/8-HEIGHT/2));
+        exitStop.addState(new Vector2(840, HEIGHT+HEIGHT/4-HEIGHT/2));
+        exitStop.addState(new Vector2(840, HEIGHT+HEIGHT/2-HEIGHT/2));
+        exitStop.addState(new Vector2(840, HEIGHT+HEIGHT/2));
+
+        Block trampoline = new Block(BodyFactory.getBlockBody(world, new Vector2(WIDTH/2+130, HEIGHT-20), new Vector2(50, 80), BodyDef.BodyType.KinematicBody));
+        trampoline.setHeight(80);
+        trampoline.setMoveSpeed(1100);
+        trampoline.setWidth(50);
+        trampoline.setName("trampoline");
+
+        trampoline.addState(new Vector2(WIDTH/2+130, HEIGHT-20));
+        trampoline.addState(new Vector2(WIDTH/2+130, HEIGHT-70));
+
+        worldObjects.add(trampoline);
+        collisionListener.registerWorldObject(trampoline);
+
+        Switch swch1 = new Switch(BodyFactory.getBody(world, new Vector2(WIDTH/2+80, HEIGHT - 100),new Vector2(120,60),BodyDef.BodyType.StaticBody),trampoline);
+        swch1.setName("Switcher");
+        swch1.getBody().getFixtureList().get(0).setSensor(true);
+
+        worldObjects.add(swch1);
+        collisionListener.registerWorldObject(swch1);
+
+
+        Block block2 = new Block(BodyFactory.getBlockBody(world, new Vector2(WIDTH/2-300, HEIGHT-200), new Vector2(100, 60), BodyDef.BodyType.KinematicBody));
+        block2.setHeight(60);
+        block2.setWidth(100);
+        block2.setName("Podium");
+
+        worldObjects.add(block2);
+        collisionListener.registerWorldObject(block2);
+
+        Block block3 = new Block(BodyFactory.getBlockBody(world, new Vector2(WIDTH/2-90, HEIGHT-300), new Vector2(100, 60), BodyDef.BodyType.KinematicBody));
+        block3.setHeight(60);
+        block3.setWidth(100);
+        block3.setName("Podium2");
+
+        worldObjects.add(block3);
+        collisionListener.registerWorldObject(block3);
+
+        Block block4 = new Block(BodyFactory.getBlockBody(world, new Vector2(WIDTH/2-300, HEIGHT-430), new Vector2(100, 60), BodyDef.BodyType.KinematicBody));
+        block4.setHeight(60);
+        block4.setWidth(100);
+        block4.setName("Podium3");
+
+        Switch swch = new Switch(BodyFactory.getBody(world, new Vector2(WIDTH/2-300, HEIGHT - 480),new Vector2(120,60),BodyDef.BodyType.StaticBody),exitStop);
+        swch.setName("Switch");
+        swch.getBody().getFixtureList().get(0).setSensor(true);
+
+        worldObjects.add(swch);
+        collisionListener.registerWorldObject(swch);
+
+        worldObjects.add(block4);
+        collisionListener.registerWorldObject(block4);
+
+
+        FloorButton button = new FloorButton(BodyFactory.getBody(world, new Vector2(540, HEIGHT - 40), new Vector2(100, 15), BodyDef.BodyType.StaticBody), exitStop);
+        button.getBody().getFixtureList().get(0).setSensor(true);
+        button.setName("Button");
+
+        worldObjects.add(button);
+        collisionListener.registerWorldObject(button);
+
+        Box box = new Box(BodyFactory.getBoxBody(world,new Vector2(WIDTH/2+WIDTH/16,HEIGHT-131),new Vector2(90,90)));
+        box.setTexture("Diamond");
+        box.setName("Box");
+        box.setHeight(90);
+        box.setWidth(90);
+
+        worldObjects.add(box);
+        collisionListener.registerWorldObject(box);
+
+
+        worldObjects.add(exitStop);
+        collisionListener.registerWorldObject(exitStop);
     }
 
 }
