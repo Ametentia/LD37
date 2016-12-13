@@ -1,0 +1,3 @@
+Manifest-Version: 1.0
+Main-Class: com.pixeldot.ld37.desktop.DesktopLauncher
+

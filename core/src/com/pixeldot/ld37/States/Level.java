@@ -171,7 +171,7 @@ public class Level extends State {
 
 
         // Debug Render Bodies
-        //debugRenderer.render(world, box2DCam.combined);
+        debugRenderer.render(world, box2DCam.combined);
     }
     public void endSequence(){
         if(!player.isAlive() && player.isCanExit()) {
@@ -335,12 +335,12 @@ public class Level extends State {
         worldObjects.add(block3);
         collisionListener.registerWorldObject(block3);
 
-        Block exitStop = new Block(BodyFactory.getBlockBody(world, new Vector2(840, HEIGHT-210), new Vector2(60, 300), BodyDef.BodyType.KinematicBody));
+        Block exitStop = new Block(BodyFactory.getBlockBody(world, new Vector2(840, HEIGHT-210), new Vector2(60, 350), BodyDef.BodyType.KinematicBody));
         exitStop.setHeight(350);
         exitStop.setWidth(60);
         exitStop.setName("ExitBlock");
 
-        exitStop.addState(new Vector2(840, HEIGHT-180));
+        exitStop.addState(new Vector2(840, HEIGHT-210));
         exitStop.addState(new Vector2(840, HEIGHT+150));
 
         worldObjects.add(exitStop);
