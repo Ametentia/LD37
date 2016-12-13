@@ -78,10 +78,17 @@ public class Block extends WorldObject implements Triggerable {
 
 
         if(states.get(currentState).y < body.getPosition().y * PPM) {
-            body.setLinearVelocity(0, -moveSpeed / PPM);
+            body.setLinearVelocity(body.getLinearVelocity().x, -moveSpeed / PPM);
         }
         else if(states.get(currentState).y > body.getPosition().y * PPM){
-            body.setLinearVelocity(0, moveSpeed / PPM);
+            body.setLinearVelocity(body.getLinearVelocity().x, moveSpeed / PPM);
+        }
+
+        if(states.get(currentState).x < body.getPosition().x * PPM) {
+            body.setLinearVelocity(-moveSpeed / PPM, body.getLinearVelocity().y);
+        }
+        else if(states.get(currentState).x > body.getPosition().x * PPM){
+            body.setLinearVelocity(moveSpeed / PPM, body.getLinearVelocity().y);
         }
     }
 
